@@ -52,7 +52,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-task wrapper(type: Wrapper){
-    gradleVersion = "$gradleVersion"
-}
