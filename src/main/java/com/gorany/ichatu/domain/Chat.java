@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "")
+@ToString(exclude = {"member", "chatRoom"})
 public class Chat extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ public class Chat extends BaseEntity{
     private Long id;
 
     @Column
-    private String message;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -28,11 +28,8 @@ public class Chat extends BaseEntity{
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-    public void changeMessage(String message){
-        this.message = message;
+    public void changeContent(String content){
+        this.content = content;
     }
 
-    public void changeRegDate(LocalDateTime now){
-        this.setRegDate(now);
-    }
 }

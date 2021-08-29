@@ -14,7 +14,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp/chat")
-                .setAllowedOriginPatterns("http://*.*.*.*:8081", "http://*:8081", "http://*.*.*.*")
+                .setAllowedOrigins("https://ichatu.ga", "https://ichatu-d9085.web.app", "http://localhost:3000")
                 .withSockJS();
     }
 
@@ -25,10 +25,10 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         This is a good convention in web applications and similar to HTTP URLs.
         However, if you are more used to messaging conventions, you can switch to using dot (.) as the separator.
          */
-        registry.setPathMatcher(new AntPathMatcher("."));
+        //registry.setPathMatcher(new AntPathMatcher("."));
         registry.setApplicationDestinationPrefixes("/pub");
-        //registry.enableSimpleBroker("/sub");
-        registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
+        registry.enableSimpleBroker("/sub");
+        //registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
 //                .setRelayPort(61613)
 //                .setRelayHost("127.0.0.1")
 //                .setClientPasscode("guest")

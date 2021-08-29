@@ -3,6 +3,8 @@ package com.gorany.ichatu.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -10,15 +12,15 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @ToString(exclude = "")
-public class Region {
+public class City {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "region_id")
+    @Column(name = "city_id")
     private Long id;
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id")
-    private City city;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "city")
+    @Builder.Default
+    private List<Region> regions = new ArrayList<>();
 }

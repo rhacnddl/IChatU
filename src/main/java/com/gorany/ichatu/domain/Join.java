@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Join {
+public class Join extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "joins_id")
@@ -23,4 +23,12 @@ public class Join {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
+
+    /* 팩토리 생성 메서드 */
+    public static Join createJoin(Member member, ChatRoom chatRoom){
+        return Join.builder()
+                .member(member)
+                .chatRoom(chatRoom)
+                .build();
+    }
 }
