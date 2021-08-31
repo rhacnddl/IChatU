@@ -1,24 +1,28 @@
 package com.gorany.ichatu.service;
 
 import com.gorany.ichatu.domain.Member;
+import com.gorany.ichatu.domain.Profile;
 import com.gorany.ichatu.dto.MemberDTO;
 import com.gorany.ichatu.dto.ProfileDTO;
 import org.springframework.lang.Nullable;
 
 public interface MemberService {
 
+    MemberDTO getOne(Long memberId);
     Long signup(MemberDTO memberDTO);
     MemberDTO login(MemberDTO memberDTO);
     void logout(Long id);
-    void updateMember(MemberDTO memberDTO, @Nullable ProfileDTO profileDTO);
+    String updateMember(MemberDTO memberDTO);
 
     default Member dtoToEntity(MemberDTO dto){
 
         /* JoinDTO -> Join */
 
         /* ProfileDTO -> Profile */
-
-        /* NotificationDTO -> Notification */
+        ProfileDTO profileDTO = dto.getProfileDTO();
+        Profile profile = profileDTO != null?
+                Profile.builder().id(profileDTO.getProfileId()).name(profileDTO.getName()).path(profileDTO.getPath()).build()
+                : null;
 
         return Member.builder()
                 .id(dto.getId())
@@ -28,18 +32,22 @@ public interface MemberService {
                 .loginDate(dto.getLoginDate())
                 .role(dto.getRole())
                 .available(dto.getAvailable())
+                .profile(profile)
                 .build();
     }
 
-    default MemberDTO entityToDTO(Member member){
+    default MemberDTO entityToDTO(@Nullable Member member, @Nullable Profile profile){
 
         /* Join -> JoinDTO */
 
         /* Profile -> ProfileDTO */
+        ProfileDTO profileDTO = profile != null?
+                ProfileDTO.builder().profileId(profile.getId()).name(profile.getName()).path(profile.getPath()).memberId(member.getId()).build()
+                : null;
 
         /* Notification -> NotificationDTO */
 
-        return MemberDTO.builder()
+        return member != null? MemberDTO.builder()
                 .id(member.getId())
                 .nickname(member.getNickname())
                 //.password(member.getPassword())
@@ -47,6 +55,8 @@ public interface MemberService {
                 .loginDate(member.getLoginDate())
                 .role(member.getRole())
                 .available(member.getAvailable())
-                .build();
+                .profileDTO(profileDTO)
+                .build()
+                : null;
     }
 }

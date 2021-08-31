@@ -17,7 +17,7 @@ import java.util.List;
 public class Member extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
+    @Column(name = "member_id", unique = true)
     private Long id;
 
     @Column
@@ -40,9 +40,9 @@ public class Member extends BaseEntity{
     @Builder.Default
     private List<Join> joinList = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "receiver")
-    @Builder.Default
-    private List<Notification> notificationList = new ArrayList<>();
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "receiver")
+//    @Builder.Default
+//    private List<Notification> notificationList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private Profile profile;

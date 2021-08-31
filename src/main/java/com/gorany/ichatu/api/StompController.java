@@ -81,7 +81,7 @@ public class StompController {
 
         /* push notification to RabbitMQ */
         notificationService.sendChatNotification(chatDTO);
-
+        System.out.println("chatDTO = " + chatDTO);
         /* Send to other subcribers */
         template.convertAndSend("/sub/room/" + chatDTO.getChatRoomId(), chatDTO);
     }

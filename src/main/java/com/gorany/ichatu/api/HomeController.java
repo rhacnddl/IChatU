@@ -26,8 +26,7 @@ public class HomeController {
     @PostMapping(value = "/signup")
     public ResponseEntity<Long> signup(@RequestBody MemberDTO memberDTO){
         log.info(memberDTO);
-        /* 1. validation */
-
+        /* 1. validation (중복된 닉네임이면 -1 return) */
         /* 2. data -> DB (sign-up) */
         Long memberId = memberService.signup(memberDTO);
         /* 3. return Member_ID */
@@ -50,11 +49,12 @@ public class HomeController {
         *  else -> do nothing
         * */
         MemberDTO result = memberService.login(memberDTO);
-        if(result.getId() != null){
+        System.out.println("result = " + result);
+        if(result != null){
             map.put(result.getId(), token);
 
             log.info(String.format("[LOGIN SUCCESS] => nickname : %s, password : %s, token : %s", nickname, password, token));
-
+            System.out.println("result = " + result);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         else{

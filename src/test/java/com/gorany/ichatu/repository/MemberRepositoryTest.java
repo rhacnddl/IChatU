@@ -46,7 +46,7 @@ class MemberRepositoryTest {
 
         //given
         System.out.println("################# given");
-        Profile profile = Profile.builder().name("TEST PROFILE").path("TEST PATH").build();
+
         Member origin = Member.builder()
                 .nickname("TEST USER")
                 .role(Role.ADMIN)
@@ -54,13 +54,9 @@ class MemberRepositoryTest {
                 .password("TEST PASSWORD")
                 .email("TEST EMAIL")
                 .build();
-        origin.changeProfile(profile);
 
         System.out.println("------ save ------");
         Long originId = repository.save(origin);
-
-        Long profileId = origin.getProfile().getId();
-        System.out.println("profileId = " + profileId);
 
         Member update = Member.builder()
                 .id(originId)
@@ -82,7 +78,7 @@ class MemberRepositoryTest {
 
         Member find = repository.findById(originId).get();
         System.out.println("find = " + find);
-        Long findProfileId = find.getProfile().getId();
+        String findProfileId = find.getProfile().getId();
 
 
         assertThat(find.getPassword()).isEqualTo("UPDATE PASSWORD");

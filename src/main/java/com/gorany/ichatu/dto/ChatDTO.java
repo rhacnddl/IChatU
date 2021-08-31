@@ -30,8 +30,11 @@ public class ChatDTO {
     private String nickname;
 
     //profile
+//    @ApiModelProperty(example = "발신자 프로필 ID", dataType = "Long")
+//    private Long profileId;
+
     @ApiModelProperty(example = "발신자 프로필 ID", dataType = "Long")
-    private Long profileId;
+    private String profileId;
     @ApiModelProperty(example = "발신자 프로필 파일명", dataType = "String")
     private String profileName;
     @ApiModelProperty(example = "발신자 프로필 경로", dataType = "String")

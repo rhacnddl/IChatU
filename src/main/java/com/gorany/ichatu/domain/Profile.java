@@ -12,9 +12,12 @@ import javax.persistence.*;
 @ToString(exclude = "member")
 public class Profile extends BaseEntity{
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "profile_id")
-    private Long id;
+//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "profile_id")
+//    private Long id;
+
+    @Id @Column(name = "profile_id")
+    private String id;
 
     private String name;
     private String path;

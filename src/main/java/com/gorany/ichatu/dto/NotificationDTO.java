@@ -34,8 +34,11 @@ public class NotificationDTO {
     private String senderNickname;
 
     //profile
+//    @ApiModelProperty(example = "발신자 프로필 ID")
+//    private Long senderProfileId;
+
     @ApiModelProperty(example = "발신자 프로필 ID")
-    private Long senderProfileId;
+    private String senderProfileId;
     @ApiModelProperty(example = "발신자 프로필 이름")
     private String senderProfileName;
     @ApiModelProperty(example = "발신자 프로필 경로")
