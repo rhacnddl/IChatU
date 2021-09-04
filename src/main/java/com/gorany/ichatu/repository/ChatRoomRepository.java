@@ -41,6 +41,7 @@ public class ChatRoomRepository {
                 "left join fetch cr.region r " +
                 "left join fetch cr.member m " +
                 "left join fetch m.profile";
+        //where region = :region 추가 예정
 
         return Optional.ofNullable(em.createQuery(query, ChatRoom.class).getResultList());
     }

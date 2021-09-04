@@ -2,6 +2,7 @@ package com.gorany.ichatu.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.*;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -17,11 +18,11 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-public class SwagConfig {
+public class SwagConfig extends WebMvcConfigurationSupport {
 
     private static final String API_NAME = "I CHAT U API";
     private static final String API_VERSION = "0.0.1";
-    private static final String API_DESCRIPTION = "I CHAT U APi 명세서";
+    private static final String API_DESCRIPTION = "I CHAT U API 명세서";
 
     //API의 이름, 버전, 설명
     public ApiInfo apiInfo(){
@@ -54,4 +55,19 @@ public class SwagConfig {
                 .paths(PathSelectors.any())
                 .build();
     }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addRedirectViewController("/api/v2/api-docs", "/v2/api-docs").setKeepQueryParams(true);
+        registry.addRedirectViewController("/api/swagger-resources/configuration/ui", "/swagger-resources/configuration/ui");
+        registry.addRedirectViewController("/api/swagger-resources/configuration/security", "/swagger-resources/configuration/security");
+        registry.addRedirectViewController("/api/swagger-resources", "/swagger-resources");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/api/**").addResourceLocations("classpath:/META-INF/resources/");
+    }
+
+
 }

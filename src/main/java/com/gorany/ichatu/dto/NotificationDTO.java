@@ -1,5 +1,6 @@
 package com.gorany.ichatu.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.NotificationType;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,6 +24,7 @@ public class NotificationDTO {
     @ApiModelProperty(example = "알림 종류")
     private NotificationType type;
     @ApiModelProperty(example = "등록일")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
     @ApiModelProperty(example = "확인 여부")
     private Character confirm;

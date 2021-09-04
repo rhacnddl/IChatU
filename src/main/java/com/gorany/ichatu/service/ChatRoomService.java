@@ -2,6 +2,7 @@ package com.gorany.ichatu.service;
 
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Member;
+import com.gorany.ichatu.domain.Profile;
 import com.gorany.ichatu.domain.Region;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 
@@ -35,6 +36,7 @@ public interface ChatRoomService {
     default ChatRoomDTO entityToDTO(ChatRoom entity){
 
         Member member = entity.getMember();
+        Profile profile = member.getProfile();
         Region region = entity.getRegion();
 
         return ChatRoomDTO.builder()
@@ -42,6 +44,9 @@ public interface ChatRoomService {
                 .name(entity.getName())
                 .memberId(member.getId())
                 .nickname(member.getNickname())
+                .profileId(profile != null? profile.getId() : null)
+                .profileName(profile != null?profile.getName() : null)
+                .profilePath(profile != null?profile.getPath() : null)
                 .regionId(region.getId())
                 .regDate(entity.getRegDate())
                 .build();

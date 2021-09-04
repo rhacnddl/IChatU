@@ -1,5 +1,6 @@
 package com.gorany.ichatu.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gorany.ichatu.domain.Role;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -26,8 +27,10 @@ public class MemberDTO {
     private String email;
 
     @ApiModelProperty(example = "최근 접속일")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime loginDate;
     @ApiModelProperty(example = "사용자 가입일")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
     @ApiModelProperty(example = "이용 가능 여부")

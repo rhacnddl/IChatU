@@ -21,6 +21,7 @@ public class ChatDTO {
     @ApiModelProperty(example = "채팅 내용")
     private String content;
     @ApiModelProperty(example = "채팅 생성 날짜")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
     //member

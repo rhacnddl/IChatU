@@ -43,6 +43,10 @@ public interface NotificationService {
     
     /* 채팅 -> 알림 */
     default Notification chatToNotification(ChatDTO chatDTO, Member sender, Member receiver){
+
+//        Profile profile = Profile.builder().id(chatDTO.getProfileId()).name(chatDTO.getProfileName()).path(chatDTO.getProfilePath()).build();
+//        sender.changeProfile(profile);
+
         return Notification.builder()
                 .type(NotificationType.CHAT)
                 .targetId(chatDTO.getChatRoomId())

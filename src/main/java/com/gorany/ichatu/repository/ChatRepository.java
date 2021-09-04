@@ -58,7 +58,8 @@ public class ChatRepository {
                 "left join fetch m.profile " +
                 "where c.chatRoom = :chatRoom " +
                 "and c.regDate > (" +
-                "select j.regDate from Join j where j.member = :member and j.chatRoom = :chatRoom) ";
+                "select j.regDate from Join j where j.member = :member and j.chatRoom = :chatRoom) " +
+                "order by c.id desc";
 
         return em.createQuery(query, Chat.class)
                 .setParameter("chatRoom", chatRoom)

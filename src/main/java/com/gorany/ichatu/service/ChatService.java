@@ -30,7 +30,7 @@ public interface ChatService {
                 .profileName(profile != null ? profile.getName() : null)
                 .profilePath(profile != null ? profile.getPath() : null)
                 .chatRoomId(chatRoom.getId())
-                .chatRoomName(chatRoom.getName())
+                //.chatRoomName(chatRoom.getName())
                 .regDate(chat.getRegDate())
                 .build();
     }

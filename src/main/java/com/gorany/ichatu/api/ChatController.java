@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -29,11 +30,9 @@ public class ChatController {
         if(chatRoomId == null || memberId == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        log.info("#ChatController -> ChatService.loadChats(Long, Long, Integer)");
+        log.info("#ChatController -> ChatService.getChats(Long, Long, Integer)");
         List<ChatDTO> chats = chatService.getChats(chatRoomId, memberId, page);
-
-        chats.forEach(System.out::println);
-
+        Collections.reverse(chats);
         return new ResponseEntity<>(chats, HttpStatus.OK);
     }
 }
