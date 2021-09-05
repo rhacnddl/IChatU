@@ -2,6 +2,7 @@ package com.gorany.ichatu.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.*;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
+@CrossOrigin("https://ichatu.ga")
 public class SwagConfig extends WebMvcConfigurationSupport {
 
     private static final String API_NAME = "I CHAT U API";
