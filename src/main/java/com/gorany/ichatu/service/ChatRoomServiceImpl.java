@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Log4j2
+@Transactional(readOnly = true)
 public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
@@ -44,6 +45,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
+    @Transactional
     public Long removeRoom(ChatRoomDTO chatRoomDTO) {
 
         ChatRoom chatRoom = dtoToEntity(chatRoomDTO);
@@ -77,5 +79,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         List<ChatRoomDTO> rooms = result.get().stream().map(this::entityToDTO).collect(Collectors.toList());
 
         return rooms;
+    }
+
+    @Override
+    public List<ChatRoomDTO> getRoomsOnAside(Long memberId) {
+        Member member = Member.builder().id(memberId).build();
+        List<ChatRoom> chatRooms = joinRepository.getAsideChatRoomsWithJoinByMember(member).get().stream().map(Join::getChatRoom).collect(Collectors.toList());
+
+        return chatRooms.stream().map(this::entityToDTO).collect(Collectors.toList());
     }
 }

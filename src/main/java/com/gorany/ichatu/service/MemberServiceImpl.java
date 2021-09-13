@@ -8,12 +8,14 @@ import com.gorany.ichatu.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
+@Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
@@ -27,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public Long signup(MemberDTO memberDTO) {
 
         /* 중복된 닉네임 CHECK */
@@ -48,6 +51,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     /* DTO -> login -> entity -> DTO */
     public MemberDTO login(MemberDTO memberDTO) {
 
@@ -64,6 +68,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public String updateMember(MemberDTO memberDTO) {
         Member member = dtoToEntity(memberDTO);
         System.out.println("member = " + member);

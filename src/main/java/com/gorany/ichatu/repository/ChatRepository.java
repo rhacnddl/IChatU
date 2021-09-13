@@ -17,13 +17,11 @@ public class ChatRepository {
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void saveAll(List<Chat> chats){
 
         chats.forEach(em::persist);
     }
 
-    @Transactional
     public Long save(Chat chat){
         em.persist(chat);
 
@@ -34,7 +32,6 @@ public class ChatRepository {
         return em.find(Chat.class, id);
     }
 
-    @Transactional
     public Long remove(Chat chat){
         em.remove(chat);
 

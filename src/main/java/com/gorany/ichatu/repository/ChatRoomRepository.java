@@ -1,6 +1,7 @@
 package com.gorany.ichatu.repository;
 
 import com.gorany.ichatu.domain.ChatRoom;
+import com.gorany.ichatu.domain.Member;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,6 @@ public class ChatRoomRepository {
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public Long save(ChatRoom chatRoom) {
         em.persist(chatRoom);
 
@@ -28,7 +28,6 @@ public class ChatRoomRepository {
         return Optional.ofNullable(em.find(ChatRoom.class, id));
     }
 
-    @Transactional
     public Long remove(ChatRoom chatRoom){
         em.remove(chatRoom);
 
@@ -45,4 +44,5 @@ public class ChatRoomRepository {
 
         return Optional.ofNullable(em.createQuery(query, ChatRoom.class).getResultList());
     }
+
 }

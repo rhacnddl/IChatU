@@ -7,6 +7,7 @@ import com.gorany.ichatu.service.ChatRoomService;
 import com.gorany.ichatu.service.JoinService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Log4j2
 @RequestMapping(value = "/api/v1/rooms")
 @CrossOrigin("*")
 public class ChatRoomController {
@@ -48,5 +50,16 @@ public class ChatRoomController {
         Long chatRoomId = chatRoomService.addRoom(chatRoomDTO);
 
         return new ResponseEntity<>(chatRoomId, HttpStatus.OK);
+    }
+
+    @GetMapping("/member/{memberId}")
+    @ApiOperation(value = "가입한 채팅방 목록 조회", notes = "내가 가입한 채팅방들의 목록을 조회한다.")
+    public ResponseEntity<List<ChatRoomDTO>> getMyRooms(@PathVariable("memberId") Long memberId){
+
+        log.info("#ChatRoomController -> getMyRooms(Long) ", memberId);
+
+        List<ChatRoomDTO> rooms = chatRoomService.getRoomsOnAside(memberId);
+
+        return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 }

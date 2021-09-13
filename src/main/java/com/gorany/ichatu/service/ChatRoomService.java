@@ -19,6 +19,8 @@ public interface ChatRoomService {
     ChatRoomDTO getRoom(Long id);
     /* 채팅방 조회(list) */
     List<ChatRoomDTO> getRooms();
+    /* A가 가입한 채팅방 목록 (ASIDE) */
+    List<ChatRoomDTO> getRoomsOnAside(Long memberId);
 
     default ChatRoom dtoToEntity(ChatRoomDTO dto){
 

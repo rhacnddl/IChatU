@@ -1,5 +1,9 @@
 package com.gorany.ichatu.service;
 
+import com.gorany.ichatu.dto.ChatRoomDTO;
+
+import java.util.List;
+
 public interface JoinService {
 
     /* A가 B 채팅방에 가입했는지 여부 조회 */
@@ -10,4 +14,5 @@ public interface JoinService {
 
     /* A가 B 채팅방 나가기 */
     Integer dropChatRoom(Long chatRoomId, Long memberId);
+
 }

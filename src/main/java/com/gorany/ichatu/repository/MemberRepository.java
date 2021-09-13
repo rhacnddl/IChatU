@@ -21,7 +21,6 @@ public class MemberRepository {
     @PersistenceContext
     private final EntityManager em;
 
-    @Transactional
     public Long save(Member member) {
 
         em.persist(member);
@@ -41,7 +40,6 @@ public class MemberRepository {
         return Optional.ofNullable(em.find(Member.class, id));
     }
 
-    @Transactional
     public Optional<Member> match(Member member) {
 
         /* JPQL은 쓰기지연 저장소의 SQL을 flush 후 실행된다. */
@@ -70,7 +68,6 @@ public class MemberRepository {
     * Update 1회 - Member (dirty checking)
     * [Delete 1회] - Profile
     * */
-    @Transactional
     public void updateMember(Member member){
         Member origin = em.createQuery("select m from Member m left join fetch m.profile where m = :member", Member.class)
                 .setParameter("member", member)

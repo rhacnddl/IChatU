@@ -23,14 +23,12 @@ public class NotificationRepository {
         return Optional.ofNullable(em.find(Notification.class, id));
     }
 
-    @Transactional
     public Long save(Notification notification){
 
         em.persist(notification);
         return notification.getId();
     }
 
-    @Transactional
     public void saveAll(List<Notification> notifications){
 
         notifications.forEach(em::persist);
@@ -62,7 +60,6 @@ public class NotificationRepository {
     }
 
     //알림 확인 (단건)
-    @Transactional
     public Integer update(Long notificationId){
 
         String query = "update Notification nt set nt.confirm = '1' where nt.id = :id";
@@ -71,7 +68,6 @@ public class NotificationRepository {
     }
 
     //알림 확인 (모두)
-    @Transactional
     public Integer updateAll(Member receiver){
         String query = "update Notification nt set nt.confirm = '1' where nt.receiver = :receiver and nt.confirm = :value";
 
@@ -81,11 +77,38 @@ public class NotificationRepository {
                 .executeUpdate();
     }
 
+    //알림 확인(채팅방)
+    public Integer updateByChatRoom(Member receiver, Long chatRoomId){
+        String query = "update Notification nt set nt.confirm = '1' where nt.receiver = :receiver and nt.confirm = :value and nt.targetId = :targetId";
+
+        return em.createQuery(query)
+                .setParameter("targetId", chatRoomId)
+                .setParameter("receiver", receiver)
+                .setParameter("value", '0')
+                .executeUpdate();
+    }
+
     //확인한 알림 전부 제거
-    @Transactional
     public Integer deleteAll(Member receiver){
         String query = "delete from Notification nt where nt.receiver = :receiver and nt.confirm = '1'";
 
         return em.createQuery(query).setParameter("receiver", receiver).executeUpdate();
     }
+
+    /*
+    * [ASIDE]
+    * 채팅방의 안읽은 채팅이 몇 개인지 개수 반환
+    * Parameter : Member(Receiver, ChatRoomId)
+    * */
+//    public List<Long> getChatsCountByReceiverAndChatRoom(Member receiver, Long chatRoomId){
+//
+//        String query = "select count(n) from Notification n " +
+//                "where n.targetId = :targetId " +
+//                "and n.receiver = :receiver";
+//
+//        return em.createQuery(query, Long.class)
+//                .setParameter("targetId", chatRoomId)
+//                .setParameter("receiver", receiver)
+//                .getResultList();
+//    }
 }

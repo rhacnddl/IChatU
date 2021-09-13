@@ -9,7 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@ToString(exclude = "")
+@ToString(exclude = "city")
 public class Region {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

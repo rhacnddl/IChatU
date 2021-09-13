@@ -20,7 +20,6 @@ public class JoinRepository {
     @PersistenceContext
     private final EntityManager em;
 
-    @Transactional
     public Long save(Join join){
 
         em.persist(join);
@@ -65,12 +64,54 @@ public class JoinRepository {
                 .getSingleResult() == 1L);
     }
 
-    @Transactional
     public int remove(Join join){
 
         return em.createQuery("delete from Join j where j.member = :member and j.chatRoom = :chatRoom")
                 .setParameter("member", join.getMember())
                 .setParameter("chatRoom", join.getChatRoom())
                 .executeUpdate();
+    }
+
+    /*
+     * ASIDE의 채팅방 목록
+     * 채팅방 [ID, 제목, 멤버, 멤버의 프로필, 지역, 채팅]
+     * 멤버 [프로필]
+     * 프로필[ID, 이름, 경로]
+     * 채팅[내용, 날짜] (추후)
+     * 지역[이름]
+     * 조인[(내가 가입한 채팅방만), 날짜]
+     */
+    public Optional<List<Join>> getAsideChatRoomsWithJoinByMember(Member member){
+
+        String query = "select j from Join j " +
+                "join fetch j.chatRoom cr " +
+                "join fetch cr.member m " +
+                "left join fetch m.profile " +
+                "join fetch cr.region " +
+                "" +
+                "where j.member = :member";
+
+        return Optional.ofNullable(
+                em.createQuery(query, Join.class)
+                        .setParameter("member", member)
+                        .getResultList()
+        );
+    }
+    public Optional<List<Object>> getAsideChatRoomsWithJoinByMemberV2(Member member){
+
+        String query = "select j, count(n) as count from Join j " +
+                "join fetch j.chatRoom cr " +
+                "join fetch cr.member m " +
+                "left join fetch m.profile " +
+                "join fetch cr.region " +
+                "left join Notification n on n.targetId = cr.id " +
+                "group by j, cr " +
+                "having j.member = :member";
+
+        return Optional.ofNullable(
+                em.createQuery(query)
+                        .setParameter("member", member)
+                        .getResultList()
+        );
     }
 }

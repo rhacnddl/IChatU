@@ -13,7 +13,6 @@ public class RegionRepository {
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public Long save(Region region){
         em.persist(region);
 

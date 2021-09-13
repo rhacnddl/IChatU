@@ -7,10 +7,12 @@ import com.gorany.ichatu.repository.JoinRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
+@Transactional(readOnly = true)
 public class JoinServiceImpl implements JoinService {
 
     private final JoinRepository joinRepository;
@@ -25,6 +27,7 @@ public class JoinServiceImpl implements JoinService {
     }
 
     @Override
+    @Transactional
     public Long joinChatRoom(Long chatRoomId, Long memberId) {
 
         Member requester = Member.builder().id(memberId).build();
@@ -35,6 +38,7 @@ public class JoinServiceImpl implements JoinService {
     }
 
     @Override
+    @Transactional
     public Integer dropChatRoom(Long chatRoomId, Long memberId) {
 
         Member requester = Member.builder().id(memberId).build();

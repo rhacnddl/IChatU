@@ -9,6 +9,7 @@ import com.gorany.ichatu.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,11 +17,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Log4j2
+@Transactional(readOnly = true)
 public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository chatRepository;
 
     @Override
+    @Transactional
     public void write(List<ChatDTO> chatDTOList) {
 
         List<Chat> chatList = chatDTOList.stream().map(this::dtoToEntity).collect(Collectors.toList());

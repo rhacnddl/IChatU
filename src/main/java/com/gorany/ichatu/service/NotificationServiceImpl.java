@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NotificationServiceImpl implements NotificationService{
 
     @Value("${exchange.name}")
@@ -72,6 +74,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    @Transactional
     public List<NotificationDTO> saveAndTransform(List<Long> memberIdList, ChatDTO chatDTO) {
         /* define profile */
         Profile profile = Profile.builder().id(chatDTO.getProfileId()).name(chatDTO.getProfileName()).path(chatDTO.getProfilePath()).build();
@@ -111,6 +114,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    @Transactional
     public Integer checkNotification(Long notificationId) {
         return notificationRepository.update(notificationId);
     }
@@ -137,6 +141,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    @Transactional
     public Integer checkNotifications(Long memberId) {
 
         Member receiver = Member.builder().id(memberId).build();
@@ -145,6 +150,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    @Transactional
     public Integer removeNotifications(Long memberId) {
 
         Member receiver = Member.builder().id(memberId).build();

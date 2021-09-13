@@ -4,6 +4,7 @@ import com.gorany.ichatu.dto.MemberDTO;
 import com.gorany.ichatu.service.MemberService;
 import com.gorany.ichatu.storage.TokenStorage;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class HomeController {
     private final MemberService memberService;
 
     @PostMapping(value = "/signup")
+    @ApiOperation(value = "회원 가입", notes = "회원 가입을 진행하기 위한 데이터 입력")
     public ResponseEntity<Long> signup(@RequestBody MemberDTO memberDTO){
         log.info(memberDTO);
         /* 1. validation (중복된 닉네임이면 -1 return) */
@@ -34,6 +36,7 @@ public class HomeController {
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "로그인", notes = "로그인을 위한 데이터 입력")
     public ResponseEntity<Object> loginPost(@RequestBody MemberDTO memberDTO){
 
         String nickname = memberDTO.getNickname();
@@ -65,6 +68,7 @@ public class HomeController {
     }
 
     @PostMapping("/logout")
+    @ApiOperation(value = "로그아웃", notes = "로그아웃을 위한 데이터 입력")
     public ResponseEntity<String> logout(@RequestBody MemberDTO memberDTO){
 
         String nickname = memberDTO.getNickname();

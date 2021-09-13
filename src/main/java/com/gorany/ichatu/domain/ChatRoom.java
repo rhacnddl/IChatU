@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@ToString(exclude = "member")
+@ToString(exclude = {"member", "region", "chatList"})
 public class ChatRoom extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,12 @@ public class ChatRoom extends BaseEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
     private Region region;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom")
+    @Builder.Default
+    private List<Chat> chatList = new ArrayList<>();
+
 }
