@@ -88,28 +88,30 @@ public class JoinRepository {
                                 "cr.chat_room_id id, cr.name, cr.reg_date, " +
                                 "m.member_id memberId, m.nickname, " +
                                 "p.profile_id profileId, p.name profileName, p.path profilePath, " +
-                                "r.region_id regionId, count(n.*) cnt, " +
-                                "(select content from CHAT where chat_room_id = j.chat_room_id limit 1) content, " +
-                                "(select reg_date from CHAT where chat_room_id = j.chat_room_id limit 1) contentRegDate " +
+                                "r.region_id regionId, count(n.notification_id) cnt, " +
+                                "(select content from CHAT where chat_room_id = j.chat_room_id order by chat_id desc limit 1) content, " +
+                                "(select reg_date from CHAT where chat_room_id = j.chat_room_id order by chat_id desc limit 1) contentRegDate, " +
+                                "j.member_id " +
                             "from JOINS j " +
                             "left join CHAT_ROOM cr on j.chat_room_id = cr.chat_room_id " +
                             "left join MEMBER m on cr.member_id = m.member_id " +
                             "left join PROFILE p on m.member_id = p.member_id " +
                             "left join REGION r on cr.region_id = r.region_id " +
-                            "left join NOTIFICATION n on cr.chat_room_id = n.target_id " +
+                            "left join NOTIFICATION n on cr.chat_room_id = n.target_id and :member_id = n.receiver_member_id and n.confirm = '0' " +
                             "group by " +
                                 "cr.chat_room_id, cr.name, cr.reg_date, " +
                                 "m.member_id, m.nickname, " +
                                 "p.profile_id, p.name, p.path, " +
                                 "r.region_id, " +
-                                "content, contentRegDate " +
+                                "content, contentRegDate, " +
+                                "j.member_id " +
                             "having j.member_id = :member_id";
 
         return em.createNativeQuery(nativeSQL)
                 .setParameter("member_id", member.getId())
                 .getResultList();
     }
-    public Optional<List<Join>> getAsideChatRoomsWithJoinByMember(Member member){
+/*    public Optional<List<Join>> getAsideChatRoomsWithJoinByMember(Member member){
 
         String query = "select j from Join j " +
                 "join fetch j.chatRoom cr " +
@@ -141,5 +143,5 @@ public class JoinRepository {
                         .setParameter("member", member)
                         .getResultList()
         );
-    }
+    }*/
 }

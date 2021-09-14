@@ -4,6 +4,7 @@ import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.Profile;
 import com.gorany.ichatu.domain.Region;
+import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface ChatRoomService {
     /* 채팅방 조회(list) */
     List<ChatRoomDTO> getRooms();
     /* A가 가입한 채팅방 목록 (ASIDE) */
-    List<ChatRoomDTO> getRoomsOnAside(Long memberId);
+    List<AsideChatRoomDTO> getRoomsOnAside(Long memberId);
 
     default ChatRoom dtoToEntity(ChatRoomDTO dto){
 

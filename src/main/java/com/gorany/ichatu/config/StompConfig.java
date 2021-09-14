@@ -14,7 +14,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/stomp/chat")
-                .setAllowedOrigins("https://ichatu.ga", "https://ichatu-d9085.web.app", "http://localhost:3000")
+                .setAllowedOrigins("https://ichatu.ga", "http://localhost:3000")
                 .withSockJS();
     }
 

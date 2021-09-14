@@ -9,6 +9,7 @@ import com.gorany.ichatu.service.NotificationService;
 import com.gorany.ichatu.storage.BufferStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -27,8 +28,8 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@Log4j2
-@CrossOrigin("*")
+@Slf4j
+@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
 public class StompController {
 
     private final SimpMessagingTemplate template;

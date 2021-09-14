@@ -3,6 +3,7 @@ package com.gorany.ichatu.service;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
+import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 import com.gorany.ichatu.repository.ChatRoomRepository;
 import com.gorany.ichatu.repository.JoinRepository;
@@ -82,10 +83,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public List<ChatRoomDTO> getRoomsOnAside(Long memberId) {
+    public List<AsideChatRoomDTO> getRoomsOnAside(Long memberId) {
         Member member = Member.builder().id(memberId).build();
-        List<ChatRoom> chatRooms = joinRepository.getAsideChatRoomsWithJoinByMember(member).get().stream().map(Join::getChatRoom).collect(Collectors.toList());
 
-        return chatRooms.stream().map(this::entityToDTO).collect(Collectors.toList());
+        //List<ChatRoom> chatRooms = joinRepository.getAsideChatRoomsWithJoinByMember(member).get().stream().map(Join::getChatRoom).collect(Collectors.toList());
+        List objList = joinRepository.getAsideChatRoomsWithJoinByMemberUsingNativeSQL(member);
+
+        List<AsideChatRoomDTO> list = (List<AsideChatRoomDTO>) objList.stream().map(obj -> AsideChatRoomDTO.createDtoByObj((Object[]) obj)).collect(Collectors.toList());
+
+        return list;
     }
+
 }

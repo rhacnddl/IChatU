@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +68,7 @@ class JoinRepositoryTest {
         /* ChatRoom & Chat create */
         List<ChatRoom> list = new ArrayList<>();
         for(int i=0; i<5; i++){
-            ChatRoom room = ChatRoom.builder().member(creator).region(region).build();
+            ChatRoom room = ChatRoom.builder().name(i+"번째 방").member(creator).region(region).build();
             list.add(room);
             em.persist(room);
 
@@ -100,20 +101,26 @@ class JoinRepositoryTest {
         resultList.forEach(o -> {
             Object[] ob = (Object[]) o;
 
-            System.out.println("방아이디 :" + ob[0]);
-            System.out.println("방이름 :" + ob[1]);
-            System.out.println("방날짜 :" + ob[2]);
-            System.out.println("방장아이디 :" + ob[3]);
-            System.out.println("방장닉네임 :" + ob[4]);
-            System.out.println("프로필아이디 :" + ob[5]);
-            System.out.println("프로필이름 :" + ob[6]);
-            System.out.println("프로필경로 :" + ob[7]);
+            System.out.println("방아이디 :" + ob[0] + " " + ob[0].getClass().getName());
+            System.out.println("방이름 :" + ob[1] + " " + ob[1].getClass());
+            System.out.println("방날짜 :" + ob[2] + " " + ob[2].getClass());
+            System.out.println("방장아이디 :" + ob[3] + " " + ob[3].getClass().getName());
+            System.out.println("방장닉네임 :" + ob[4] + " " + ob[4].getClass().getName());
+            System.out.println("프로필아이디 :" + ob[5] + " " );
+            System.out.println("프로필이름 :" + ob[6] + " ");
+            System.out.println("프로필경로 :" + ob[7] + " " );
             System.out.println("지역아이디 :" + ob[8]);
-            System.out.println("읽지않은알림개수 :" + ob[9]);
+            System.out.println("읽지않은알림개수 :" + ob[9] + " " + ob[9].getClass().getName());
             System.out.println("가장최근채팅내용 :" + ob[10]);
             System.out.println("가장최근채팅시간 :" + ob[11]);
 
+
+            AsideChatRoomDTO dto = AsideChatRoomDTO.createDtoByObj(ob);
+
+            System.out.println(dto);
             System.out.println("-----------------------");
+
+
         });
 
         //then

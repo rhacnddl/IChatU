@@ -56,6 +56,7 @@ public class NotificationServiceImpl implements NotificationService{
         6. Send to Rabbit
         *  */
     @Override
+    @Transactional
     public void sendChatNotification(ChatDTO chatDTO) {
         /* debug */
         map.forEach((k, v) -> {
@@ -83,13 +84,13 @@ public class NotificationServiceImpl implements NotificationService{
                 .id(chatDTO.getMemberId())
                 .nickname(chatDTO.getNickname())
                 .build();
-
+        System.out.println(sender);
         /* define receiver and change to Notification (발신자 == 수신자 인 것 제외) */
         List<Notification> notificationList = memberIdList.stream()
                 .filter(id -> id != sender.getId())
                 .map(id -> {
                     Member receiver = Member.builder().id(id).build();
-
+                    System.out.println(receiver);
                     return chatToNotification(chatDTO, sender, receiver);
                 }).collect(Collectors.toList());
 
@@ -111,6 +112,14 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void sendCommentNotification() {
 
+    }
+
+    @Override
+    public Integer updateNotificationsByChatRoomAndMember(Long chatRoomId, Long memberId) {
+
+        Member receiver = Member.builder().id(memberId).build();
+
+        return notificationRepository.updateAllByChatRoomAndMember(chatRoomId, receiver);
     }
 
     @Override

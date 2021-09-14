@@ -71,5 +71,4 @@ public class SwagConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/api/**").addResourceLocations("classpath:/META-INF/resources/");
     }
 
-
 }

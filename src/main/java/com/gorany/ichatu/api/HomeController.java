@@ -7,6 +7,7 @@ import com.gorany.ichatu.storage.TokenStorage;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@Log4j2
+@Slf4j
 @RequestMapping(value = "/api/v1")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
 public class HomeController {
 
     private static final TokenStorage storage = TokenStorage.getInstance();
@@ -27,7 +28,8 @@ public class HomeController {
     @PostMapping(value = "/signup")
     @ApiOperation(value = "회원 가입", notes = "회원 가입을 진행하기 위한 데이터 입력")
     public ResponseEntity<Long> signup(@RequestBody MemberDTO memberDTO){
-        log.info(memberDTO);
+
+        log.info(memberDTO.toString());
         /* 1. validation (중복된 닉네임이면 -1 return) */
         /* 2. data -> DB (sign-up) */
         Long memberId = memberService.signup(memberDTO);

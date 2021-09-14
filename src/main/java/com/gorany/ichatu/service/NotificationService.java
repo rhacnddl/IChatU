@@ -36,6 +36,8 @@ public interface NotificationService {
     /* 댓글 -> 알림 전송 */
     void sendCommentNotification();
 
+    Integer updateNotificationsByChatRoomAndMember(Long chatRoomId, Long memberId);
+
     /* 댓글 -> 알림 */
     default NotificationDTO commentToNotification(){
         return null;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -46,5 +47,24 @@ public class AsideChatRoomDTO {
     @ApiModelProperty(example = "가장 최근 채팅 내용")
     private String content;
     @ApiModelProperty(example = "가장 최근 채팅 시간")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime contentRegDate;
+
+    public static AsideChatRoomDTO createDtoByObj(Object[] o){
+        AsideChatRoomDTO dto = new AsideChatRoomDTO();
+        dto.id = o[0] != null? Long.parseLong(String.valueOf(o[0])) : null;
+        dto.name = o[1] != null? (String) o[1] : null;
+        dto.regDate = o[2] != null? ((Timestamp)o[2]).toLocalDateTime() : null;
+        dto.memberId = o[3] != null? Long.parseLong(String.valueOf(o[3])) : null;
+        dto.nickname = o[4] != null? (String) o[4] : null;
+        dto.profileId = o[5] != null? (String) o[5] : null;
+        dto.profileName = o[6] != null? (String) o[6] : null;
+        dto.profilePath = o[7] != null? (String) o[7] : null;
+        dto.regionId = o[8] != null? Long.parseLong(String.valueOf(o[8])) : null;
+        dto.cnt = o[9] != null? Long.parseLong(String.valueOf(o[9])) : null;
+        dto.content = o[10] != null? (String) o[10] : null;
+        dto.contentRegDate = o[11] != null? ((Timestamp) o[11]).toLocalDateTime() : null;
+
+        return dto;
+    }
 }

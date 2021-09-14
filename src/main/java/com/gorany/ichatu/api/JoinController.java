@@ -4,6 +4,7 @@ import com.gorany.ichatu.service.JoinService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/v1/joins")
 @RequiredArgsConstructor
-@Log4j2
-@CrossOrigin("*")
+@Slf4j
+@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
 public class JoinController {
 
     private final JoinService joinService;

@@ -5,6 +5,7 @@ import com.gorany.ichatu.service.NotificationService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,9 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 @RequestMapping(value = "/api/v1/notifications")
-@CrossOrigin("*")
+@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -70,5 +71,14 @@ public class NotificationController {
         log.info("# NotificationController -> removeNotifications(Long) : {}", removeCount);
 
         return new ResponseEntity<>(removeCount, HttpStatus.OK);
+    }
+
+    @PutMapping("/room/{chatRoomId}/member/{memberId}")
+    @ApiOperation(value = "특정 채팅방의 확인하지 않은 알림 모두 확인 처리", notes = "사용자가 채팅방 입장 시 쌓인 알림을 모두 확인 처리한다.")
+    public ResponseEntity<Long> updateNotificationsOnRoom(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
+
+
+
+        return new ResponseEntity<>(1L, HttpStatus.OK);
     }
 }

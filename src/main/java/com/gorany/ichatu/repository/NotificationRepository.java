@@ -1,5 +1,6 @@
 package com.gorany.ichatu.repository;
 
+import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.Notification;
 import com.gorany.ichatu.exception.NoIdentityException;
@@ -95,20 +96,13 @@ public class NotificationRepository {
         return em.createQuery(query).setParameter("receiver", receiver).executeUpdate();
     }
 
-    /*
-    * [ASIDE]
-    * 채팅방의 안읽은 채팅이 몇 개인지 개수 반환
-    * Parameter : Member(Receiver, ChatRoomId)
-    * */
-//    public List<Long> getChatsCountByReceiverAndChatRoom(Member receiver, Long chatRoomId){
-//
-//        String query = "select count(n) from Notification n " +
-//                "where n.targetId = :targetId " +
-//                "and n.receiver = :receiver";
-//
-//        return em.createQuery(query, Long.class)
-//                .setParameter("targetId", chatRoomId)
-//                .setParameter("receiver", receiver)
-//                .getResultList();
-//    }
+    //특정 채팅방에 쌓인 알림 모두 확인 처리
+    //사용자가 채팅방 입장 시 호출되는 메서드
+    public Integer updateAllByChatRoomAndMember(Long chatRoomId, Member member){
+
+        return em.createQuery("update Notification n set n.confirm = '1' where n.confirm = '0' and n.receiver = :member and n.targetId = :chatRoomId")
+                .setParameter("member", member)
+                .setParameter("chatRoomId", chatRoomId)
+                .executeUpdate();
+    }
 }
