@@ -1,9 +1,6 @@
 package com.gorany.ichatu.service;
 
-import com.gorany.ichatu.domain.Member;
-import com.gorany.ichatu.domain.Notification;
-import com.gorany.ichatu.domain.NotificationType;
-import com.gorany.ichatu.domain.Profile;
+import com.gorany.ichatu.domain.*;
 import com.gorany.ichatu.dto.ChatDTO;
 import com.gorany.ichatu.dto.NotificationDTO;
 import com.gorany.ichatu.storage.TokenStorage;
@@ -36,6 +33,7 @@ public interface NotificationService {
     /* 댓글 -> 알림 전송 */
     void sendCommentNotification();
 
+    /* 채팅방 입장 -> 알림 확인 처리 */
     Integer updateNotificationsByChatRoomAndMember(Long chatRoomId, Long memberId);
 
     /* 댓글 -> 알림 */
@@ -89,4 +87,5 @@ public interface NotificationService {
                 .id(dto.getId())
                 .build();
     }
+
 }

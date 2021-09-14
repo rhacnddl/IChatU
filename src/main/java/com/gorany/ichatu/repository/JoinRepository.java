@@ -73,6 +73,12 @@ public class JoinRepository {
                 .executeUpdate();
     }
 
+    public int removeAll(ChatRoom chatRoom){
+        return em.createQuery("delete from Join j where j.chatRoom = :chatRoom")
+                .setParameter("chatRoom", chatRoom)
+                .executeUpdate();
+    }
+
     /*
      * ASIDE의 채팅방 목록
      * 채팅방 [ID, 제목, 멤버, 멤버의 프로필, 지역, 채팅]

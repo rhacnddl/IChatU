@@ -105,4 +105,11 @@ public class NotificationRepository {
                 .setParameter("chatRoomId", chatRoomId)
                 .executeUpdate();
     }
+
+    //채팅방에 의해 알림 모두 제거
+    public Integer removeAllByChatRoom(ChatRoom chatRoom){
+        return em.createQuery("delete from Notification n where n.targetId = :targetId")
+                .setParameter("targetId", chatRoom.getId())
+                .executeUpdate();
+    }
 }

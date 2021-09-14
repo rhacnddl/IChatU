@@ -166,4 +166,5 @@ public class NotificationServiceImpl implements NotificationService{
 
         return notificationRepository.deleteAll(receiver);
     }
+
 }

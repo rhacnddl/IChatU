@@ -7,6 +7,7 @@ import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 import com.gorany.ichatu.repository.ChatRoomRepository;
 import com.gorany.ichatu.repository.JoinRepository;
+import com.gorany.ichatu.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ChatRoomServiceImpl implements ChatRoomService {
 
+    private final NotificationRepository notificationRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final JoinRepository joinRepository;
 
@@ -47,11 +49,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     @Transactional
-    public Long removeRoom(ChatRoomDTO chatRoomDTO) {
+    public Long removeRoom(Long chatRoomId) {
 
-        ChatRoom chatRoom = dtoToEntity(chatRoomDTO);
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();
 
         log.info("# ChatRoomService -> ChatRoomRepository.remove(ChatRoom)");
+
+        notificationRepository.removeAllByChatRoom(chatRoom);
+        joinRepository.removeAll(chatRoom);
+
         return chatRoomRepository.remove(chatRoom);
     }
 
@@ -94,4 +100,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return list;
     }
 
+    @Override
+    public boolean isOwner(Long chatRoomId, Long memberId) {
+
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();
+
+        return chatRoom.getMember().getId().equals(memberId);
+    }
 }

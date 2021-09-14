@@ -64,4 +64,18 @@ public class ChatRoomController {
 
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{chatRoomId}/member/{memberId}")
+    @ApiOperation(value = "채팅방 삭제", notes = "방장이 채팅방을 삭제한다. 관련된 알림과 채팅도 함께 삭제된다.")
+    public ResponseEntity<Long> removeChatRoom(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
+
+        /* Requester == Owner인지 Check Validation */
+        if(!chatRoomService.isOwner(chatRoomId, memberId)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Long id = chatRoomService.removeRoom(chatRoomId);
+
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }

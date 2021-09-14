@@ -15,13 +15,15 @@ public interface ChatRoomService {
     /* 채팅방 추가 */
     Long addRoom(ChatRoomDTO chatRoomDTO);
     /* 채팅방 삭제 */
-    Long removeRoom(ChatRoomDTO chatRoomDTO);
+    Long removeRoom(Long chatRoomId);
     /* 채팅방 조회(단건) */
     ChatRoomDTO getRoom(Long id);
     /* 채팅방 조회(list) */
     List<ChatRoomDTO> getRooms();
     /* A가 가입한 채팅방 목록 (ASIDE) */
     List<AsideChatRoomDTO> getRoomsOnAside(Long memberId);
+    /* 채팅방 삭제시, 주인인지 유효성 검사 */
+    boolean isOwner(Long chatRoomId, Long memberId);
 
     default ChatRoom dtoToEntity(ChatRoomDTO dto){
 
@@ -54,4 +56,5 @@ public interface ChatRoomService {
                 .regDate(entity.getRegDate())
                 .build();
     }
+
 }

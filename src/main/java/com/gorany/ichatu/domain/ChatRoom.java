@@ -28,7 +28,7 @@ public class ChatRoom extends BaseEntity{
     @JoinColumn(name = "region_id")
     private Region region;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<Chat> chatList = new ArrayList<>();
 

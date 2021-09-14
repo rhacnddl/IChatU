@@ -31,6 +31,7 @@ public class NotificationController {
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
+    /* deprecated */
     @PostMapping("/{id}/confirm")
     @ApiOperation(value = "단건 알림 확인", notes = "특정 알림 하나를 확인 처리한다.")
     public ResponseEntity<String> checkNotification(@PathVariable("id") Long notificationId){
@@ -75,10 +76,11 @@ public class NotificationController {
 
     @PutMapping("/room/{chatRoomId}/member/{memberId}")
     @ApiOperation(value = "특정 채팅방의 확인하지 않은 알림 모두 확인 처리", notes = "사용자가 채팅방 입장 시 쌓인 알림을 모두 확인 처리한다.")
-    public ResponseEntity<Long> updateNotificationsOnRoom(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
+    public ResponseEntity<Integer> updateNotificationsOnRoom(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
 
+        log.info("# NotificationController -> updateNotificationsOnRoom(Long, Long) : {}, {}", chatRoomId, memberId);
+        Integer count = notificationService.updateNotificationsByChatRoomAndMember(chatRoomId, memberId);
 
-
-        return new ResponseEntity<>(1L, HttpStatus.OK);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }
