@@ -24,7 +24,7 @@ public class MemberRepository {
     public Long save(Member member) {
 
         em.persist(member);
-        //em.clear();
+
         return member.getId();
     }
 

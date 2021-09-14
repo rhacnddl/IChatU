@@ -2,16 +2,14 @@ package com.gorany.ichatu.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class AsideChatRoomDTO {
 
@@ -43,5 +41,10 @@ public class AsideChatRoomDTO {
     //city
 
     @ApiModelProperty(example = "읽지 않은 채팅 개수")
-    private Long count;
+    private Long cnt;
+
+    @ApiModelProperty(example = "가장 최근 채팅 내용")
+    private String content;
+    @ApiModelProperty(example = "가장 최근 채팅 시간")
+    private LocalDateTime contentRegDate;
 }

@@ -3,6 +3,7 @@ package com.gorany.ichatu.repository;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
+import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.exception.NoIdentityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -81,6 +82,33 @@ public class JoinRepository {
      * 지역[이름]
      * 조인[(내가 가입한 채팅방만), 날짜]
      */
+    public List getAsideChatRoomsWithJoinByMemberUsingNativeSQL(Member member){
+
+        String nativeSQL = "select " +
+                                "cr.chat_room_id id, cr.name, cr.reg_date, " +
+                                "m.member_id memberId, m.nickname, " +
+                                "p.profile_id profileId, p.name profileName, p.path profilePath, " +
+                                "r.region_id regionId, count(n.*) cnt, " +
+                                "(select content from CHAT where chat_room_id = j.chat_room_id limit 1) content, " +
+                                "(select reg_date from CHAT where chat_room_id = j.chat_room_id limit 1) contentRegDate " +
+                            "from JOINS j " +
+                            "left join CHAT_ROOM cr on j.chat_room_id = cr.chat_room_id " +
+                            "left join MEMBER m on cr.member_id = m.member_id " +
+                            "left join PROFILE p on m.member_id = p.member_id " +
+                            "left join REGION r on cr.region_id = r.region_id " +
+                            "left join NOTIFICATION n on cr.chat_room_id = n.target_id " +
+                            "group by " +
+                                "cr.chat_room_id, cr.name, cr.reg_date, " +
+                                "m.member_id, m.nickname, " +
+                                "p.profile_id, p.name, p.path, " +
+                                "r.region_id, " +
+                                "content, contentRegDate " +
+                            "having j.member_id = :member_id";
+
+        return em.createNativeQuery(nativeSQL)
+                .setParameter("member_id", member.getId())
+                .getResultList();
+    }
     public Optional<List<Join>> getAsideChatRoomsWithJoinByMember(Member member){
 
         String query = "select j from Join j " +
