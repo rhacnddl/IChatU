@@ -126,4 +126,40 @@ class JoinRepositoryTest {
         //then
         assertThat(resultList.size()).isEqualTo(5);
     }
+
+    @Test
+    @DisplayName("채팅방에 가입한 멤버와 프로필 목록 조회 테스트")
+    void getMembersAndProfileTest(){
+
+        //given
+        Region region = Region.builder().name("dobong").build();
+        em.persist(region);
+
+        Member user_a = Member.builder().nickname("user a").build();
+        Member user_b = Member.builder().nickname("user b").build();
+        Member user_c = Member.builder().nickname("user c").build();
+        em.persist(user_a); em.persist(user_b); em.persist(user_c);
+
+        Profile profile = Profile.builder().name("12345").path("54321").id("exam").build();
+        user_b.changeProfile(profile);
+
+        ChatRoom chatRoom = ChatRoom.builder().name("TEST ROOM").member(user_a).region(region).build();
+        em.persist(chatRoom);
+
+        Join join1 = Join.builder().chatRoom(chatRoom).member(user_a).build();
+        Join join2 = Join.builder().chatRoom(chatRoom).member(user_b).build();
+        Join join3 = Join.builder().chatRoom(chatRoom).member(user_c).build();
+
+        em.persist(join1); em.persist(join2); em.persist(join3);
+
+        em.flush();
+        em.clear();
+        //when
+        List<Join> joins = joinRepository.getMembersAndProfile(chatRoom).get();
+
+        //then
+        assertThat(joins.size()).isEqualTo(3);
+        assertThat(joins.get(1).getMember().getProfile().getName()).isEqualTo("12345");
+
+    }
 }

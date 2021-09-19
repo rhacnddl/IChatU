@@ -3,10 +3,14 @@ package com.gorany.ichatu.api;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
+import com.gorany.ichatu.dto.ChatRoomMemberDTO;
 import com.gorany.ichatu.repository.ChatRoomRepository;
 import com.gorany.ichatu.service.ChatRoomService;
 import com.gorany.ichatu.service.JoinService;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -77,5 +82,29 @@ public class ChatRoomController {
         Long id = chatRoomService.removeRoom(chatRoomId);
 
         return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
+    @GetMapping("/{chatRoomId}/users")
+    @ApiOperation(value = "채팅방에 가입한 멤버 목록 조회", notes = "특정 채팅방에 가입한 멤버 목록을 프로필과 함께 조회한다.")
+    public ResponseEntity<ChatRoomMemberResponse> getMembersJoiningChatRoom(@PathVariable("chatRoomId") Long id){
+
+        log.info("#ChatRoom Controller -> getMembersJoiningChatRoom(Long) : {}", id);
+        List<ChatRoomMemberDTO> result = chatRoomService.getMembersOnChatRoom(id);
+
+        return new ResponseEntity<>(new ChatRoomMemberResponse(result), HttpStatus.OK);
+    }
+
+    @Getter
+    static class ChatRoomMemberResponse{
+
+        @ApiModelProperty(example = "채팅방에 가입한 멤버 목록")
+        private List<ChatRoomMemberDTO> members;
+        @ApiModelProperty(example = "채팅방에 가입한 멤버 수")
+        private int count;
+
+        private ChatRoomMemberResponse(List<ChatRoomMemberDTO> members) {
+            this.members = members;
+            this.count = members.size();
+        }
     }
 }

@@ -1,11 +1,13 @@
 package com.gorany.ichatu.repository;
 
+import com.gorany.ichatu.domain.Chat;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.exception.NoIdentityException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,6 +82,24 @@ public class JoinRepository {
     }
 
     /*
+     * @ChatRoom에 가입한 멤버를 조회하는 Method
+     * <Entity>
+     * Member, Profile
+     * */
+    public Optional<List<Join>> getMembersAndProfile(ChatRoom chatRoom){
+        String query = "select j from Join j " +
+                "join fetch j.member m " +
+                "left join fetch m.profile " +
+                "where j.chatRoom = :chatRoom";
+
+        return Optional.ofNullable(
+                em.createQuery(query, Join.class)
+                        .setParameter("chatRoom", chatRoom)
+                        .getResultList()
+        );
+    }
+
+    /*
      * ASIDE의 채팅방 목록
      * 채팅방 [ID, 제목, 멤버, 멤버의 프로필, 지역, 채팅]
      * 멤버 [프로필]
@@ -117,6 +137,7 @@ public class JoinRepository {
                 .setParameter("member_id", member.getId())
                 .getResultList();
     }
+
 /*    public Optional<List<Join>> getAsideChatRoomsWithJoinByMember(Member member){
 
         String query = "select j from Join j " +

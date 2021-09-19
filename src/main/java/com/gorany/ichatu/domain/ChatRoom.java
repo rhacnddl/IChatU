@@ -32,4 +32,7 @@ public class ChatRoom extends BaseEntity{
     @Builder.Default
     private List<Chat> chatList = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom")
+    @Builder.Default
+    private List<Join> joinList = new ArrayList<>();
 }

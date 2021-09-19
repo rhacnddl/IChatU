@@ -44,5 +44,4 @@ public class ChatRoomRepository {
 
         return Optional.ofNullable(em.createQuery(query, ChatRoom.class).getResultList());
     }
-
 }

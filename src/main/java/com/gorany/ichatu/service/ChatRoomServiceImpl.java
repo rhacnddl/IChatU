@@ -5,6 +5,7 @@ import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
+import com.gorany.ichatu.dto.ChatRoomMemberDTO;
 import com.gorany.ichatu.repository.ChatRoomRepository;
 import com.gorany.ichatu.repository.JoinRepository;
 import com.gorany.ichatu.repository.NotificationRepository;
@@ -106,5 +107,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();
 
         return chatRoom.getMember().getId().equals(memberId);
+    }
+
+    @Override
+    public List<ChatRoomMemberDTO> getMembersOnChatRoom(Long chatRoomId) {
+
+        ChatRoom chatRoom = ChatRoom.builder().id(chatRoomId).build();
+
+        List<Join> joins = joinRepository.getMembersAndProfile(chatRoom).get();
+
+        return joins.stream().map(ChatRoomMemberDTO::createChatRoomMemberDTO).collect(Collectors.toList());
     }
 }

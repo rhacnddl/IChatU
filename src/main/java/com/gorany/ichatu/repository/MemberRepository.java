@@ -1,5 +1,6 @@
 package com.gorany.ichatu.repository;
 
+import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.Profile;
 import com.gorany.ichatu.exception.NoIdentityException;
@@ -82,4 +83,5 @@ public class MemberRepository {
         origin.update(member);
 //        em.persist(origin);
     }
+
 }

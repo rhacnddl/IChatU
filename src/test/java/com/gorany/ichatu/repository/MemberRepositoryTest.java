@@ -1,8 +1,6 @@
 package com.gorany.ichatu.repository;
 
-import com.gorany.ichatu.domain.Member;
-import com.gorany.ichatu.domain.Profile;
-import com.gorany.ichatu.domain.Role;
+import com.gorany.ichatu.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -93,4 +93,5 @@ class MemberRepositoryTest {
         assertThat(find.getProfile().getName()).isEqualTo("UPDATE PROFILE");
         assertThat(find.getProfile().getId()).isNotNull();
     }
+
 }

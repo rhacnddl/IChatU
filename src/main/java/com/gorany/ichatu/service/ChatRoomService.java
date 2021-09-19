@@ -6,6 +6,7 @@ import com.gorany.ichatu.domain.Profile;
 import com.gorany.ichatu.domain.Region;
 import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
+import com.gorany.ichatu.dto.ChatRoomMemberDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,8 @@ public interface ChatRoomService {
     List<AsideChatRoomDTO> getRoomsOnAside(Long memberId);
     /* 채팅방 삭제시, 주인인지 유효성 검사 */
     boolean isOwner(Long chatRoomId, Long memberId);
+    /* A 채팅방에 가입한 Member 목록 조회 */
+    List<ChatRoomMemberDTO> getMembersOnChatRoom(Long chatRoomId);
 
     default ChatRoom dtoToEntity(ChatRoomDTO dto){
 
