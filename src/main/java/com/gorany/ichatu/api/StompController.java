@@ -7,6 +7,7 @@ import com.gorany.ichatu.dto.ProfileDTO;
 import com.gorany.ichatu.service.ChatService;
 import com.gorany.ichatu.service.NotificationService;
 import com.gorany.ichatu.storage.BufferStorage;
+import com.gorany.ichatu.storage.CheckStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
@@ -43,17 +44,32 @@ public class StompController {
 
     private final static BufferStorage bufferStorage = BufferStorage.getInstance();
     private Map<Long, List<ChatDTO>> bufferMap;
+    private final static CheckStorage checkStorage = CheckStorage.getInstance();
+    private Map<Long, List<Long>> checkMap;
 
     @PostConstruct
     private void init(){
         this.bufferMap = bufferStorage.getBufferMap();
+        this.checkMap = checkStorage.getCheckMap();
     }
 
 
     @MessageMapping("/chat/enter")
     public void enter(ChatDTO chatDTO){
 
-        template.convertAndSend("/sub/room/" + chatDTO.getChatRoomId(), chatDTO);
+        Long mid = chatDTO.getMemberId();
+        Long cid = chatDTO.getChatRoomId();
+
+        if(checkMap.containsKey(cid)){
+            checkMap.get(cid).add(mid);
+        }
+        else {
+            List<Long> members = new ArrayList<>();
+            members.add(mid);
+
+            checkMap.put(mid, members);
+        }
+        //template.convertAndSend("/sub/room/" + chatDTO.getChatRoomId(), chatDTO);
     }
 
     @MessageMapping("/chat/message")
@@ -90,6 +106,16 @@ public class StompController {
     @MessageMapping("/chat/exit")
     public void exit(ChatDTO chatDTO){
 
-        template.convertAndSend("/sub/room/" + chatDTO.getChatRoomId(), chatDTO);
+        Long mid = chatDTO.getMemberId();
+        Long cid = chatDTO.getChatRoomId();
+
+        List<Long> members = checkMap.get(cid);
+
+        members.remove(mid);
+
+        if(members.isEmpty()) {
+            checkMap.remove(cid);
+        }
+        //template.convertAndSend("/sub/room/" + chatDTO.getChatRoomId(), chatDTO);
     }
 }
