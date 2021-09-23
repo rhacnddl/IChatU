@@ -46,7 +46,8 @@ public class MemberRepository {
         /* JPQL은 쓰기지연 저장소의 SQL을 flush 후 실행된다. */
         List<Member> find = null;
         try {
-            find = em.createQuery("select m from Member m left join fetch m.profile where m.nickname = :nickname and m.password = :password", Member.class)
+            find = em.createQuery("select m from Member m left join fetch m.profile where m.nickname = :nickname and m.password = :password " +
+                    "and m.available = true", Member.class)
                     .setParameter("nickname", member.getNickname())
                     .setParameter("password", member.getPassword())
                     .getResultList();
@@ -84,4 +85,19 @@ public class MemberRepository {
 //        em.persist(origin);
     }
 
+    /*
+    * Mypage에서 Member + Profile 정보 조회
+    * */
+    public Optional<Member> findMemberWithProfile(Member member){
+
+        String query = "select m from Member m " +
+                "left join fetch m.profile " +
+                "where m = :member";
+
+        return Optional.of(
+                em.createQuery(query, Member.class)
+                    .setParameter("member", member)
+                    .getSingleResult()
+        );
+    }
 }

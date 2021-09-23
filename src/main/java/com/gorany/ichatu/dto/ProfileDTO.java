@@ -12,18 +12,18 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProfileDTO {
 
-//    @ApiModelProperty(example = "프로필 ID")
+//    @ApiModelProperty(value = "프로필 ID")
 //    private Long profileId;
 
-    @ApiModelProperty(example = "프로필 ID")
+    @ApiModelProperty(value = "프로필 ID")
     private String profileId;
 
-    @ApiModelProperty(example = "프로필 파일명")
+    @ApiModelProperty(value = "프로필 파일명")
     private String name;
-    @ApiModelProperty(example = "프로필 파일 경로")
+    @ApiModelProperty(value = "프로필 파일 경로")
     private String path;
 
     //member
-    @ApiModelProperty(example = "프로필 소유자 ID")
+    @ApiModelProperty(value = "프로필 소유자 ID")
     private Long memberId;
 }

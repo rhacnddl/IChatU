@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 
 import java.util.List;
 
+import static com.gorany.ichatu.domain.Member.builder;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -28,12 +29,12 @@ class MemberRepositoryTest {
     void match() {
 
         //given
-        Member member = Member.builder().nickname("gorany").password("12345").role(Role.ADMIN).available(Boolean.TRUE).build();
+        Member member = builder().nickname("gorany").password("12345").role(Role.ADMIN).available(Boolean.TRUE).build();
         repository.save(member);
 
         String nickname = "gorany";
         String password = "12345";
-        Member source = Member.builder().nickname(nickname).password(password).build();
+        Member source = builder().nickname(nickname).password(password).build();
 
         //when
         Member resultMember = repository.match(source).get();
@@ -52,7 +53,7 @@ class MemberRepositoryTest {
         //given
         System.out.println("################# given");
 
-        Member origin = Member.builder()
+        Member origin = builder()
                 .nickname("TEST USER")
                 .role(Role.ADMIN)
                 .available(Boolean.TRUE)
@@ -66,7 +67,7 @@ class MemberRepositoryTest {
         em.flush();
         em.clear();
 
-        Member update = Member.builder()
+        Member update = builder()
                 .id(originId)
                 .nickname("UPDATE USER")
                 .role(Role.USER)
@@ -94,4 +95,27 @@ class MemberRepositoryTest {
         assertThat(find.getProfile().getId()).isNotNull();
     }
 
+    @Test
+    @DisplayName("멤버와 프로필 조회 테스트")
+    public void 멤버_프로필_조회테스트() throws Exception{
+
+        //given
+        Member member = builder().nickname("test").email("test@naver.com").build();
+        em.persist(member);
+        Profile profile = Profile.builder().id("random").name("test Profile").path("test Path").build();
+        member.changeProfile(profile);
+
+        Long mid = member.getId();
+
+        em.flush();
+        em.clear();
+        //when
+        Member source = builder().id(mid).build();
+        Member find = repository.findMemberWithProfile(source).get();
+
+        //then
+        assertThat(find.getId()).isEqualTo(member.getId());
+        assertThat(find.getProfile().getId()).isEqualTo("random");
+
+    }
 }

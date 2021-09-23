@@ -25,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping(value = "/api/v1/rooms")
-@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;

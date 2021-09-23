@@ -88,7 +88,7 @@ public class Member extends BaseEntity{
     private void changeAvailable(Boolean available){
         this.available = available;
     }
-    private void changePassword(String password){
+    public void changePassword(String password){
         /* 추후 암호화 적용 */
         this.password = password;
     }
@@ -97,15 +97,25 @@ public class Member extends BaseEntity{
         profile.changeMember(this);
     }
 
+    /* Parameter의 비밀번호가 맞는지 Check */
+    public Boolean isCorrectPassword(String password){
+        return this.password.equals(password);
+    }
+
     /* Login시, 적용 */
     public void updateLoginDate(){
         this.loginDate = LocalDateTime.now();
     }
 
+    /* 회원 탈퇴 */
     public void deleteUser(){
         this.available = false;
-        nickname = null;
+        this.nickname = "탈퇴한 사용자";
+        this.email = null;
+        this.password = null;
+
+        Profile profile = this.profile;
+        if(profile != null)
+            profile.delete();
     }
-
-
 }

@@ -2,8 +2,7 @@ package com.gorany.ichatu.service;
 
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.Profile;
-import com.gorany.ichatu.dto.MemberDTO;
-import com.gorany.ichatu.dto.ProfileDTO;
+import com.gorany.ichatu.dto.*;
 import org.springframework.lang.Nullable;
 
 public interface MemberService {
@@ -12,7 +11,14 @@ public interface MemberService {
     Long signup(MemberDTO memberDTO);
     MemberDTO login(MemberDTO memberDTO);
     void logout(Long id);
+    /* Member or Profile 변경 */
     String updateMember(MemberDTO memberDTO);
+    /* Member + Profile 조회 */
+    MemberProfileDTO getMemberInfo(Long id);
+    /* Password 변경! */
+    Boolean updatePassword(MemberPasswordRequest request);
+    /* Drop Member */
+    Boolean dropMember(MemberDropRequest request);
 
     default Member dtoToEntity(MemberDTO dto){
 

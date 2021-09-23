@@ -46,4 +46,10 @@ public class Profile extends BaseEntity{
     public void changeMember(Member member){
         this.member = member;
     }
+
+    public void delete(){
+        id = null;
+        name = null;
+        path = null;
+    }
 }

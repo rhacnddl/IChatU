@@ -16,34 +16,34 @@ import java.time.LocalDateTime;
 public class ChatDTO {
 
     //chat
-    @ApiModelProperty(example = "채팅 ID")
+    @ApiModelProperty(value = "채팅 ID", example = "1")
     private Long id;
-    @ApiModelProperty(example = "채팅 내용")
+    @ApiModelProperty(value = "채팅 내용", example = "Hello World")
     private String content;
-    @ApiModelProperty(example = "채팅 생성 날짜")
+    @ApiModelProperty(value = "채팅 생성 날짜", example = "2021-09-23 18:12:23")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
     //member
-    @ApiModelProperty(example = "발신자 ID", dataType = "Long")
+    @ApiModelProperty(value = "발신자 ID", dataType = "Long", example = "1")
     private Long memberId;
-    @ApiModelProperty(example = "발신자 닉네임", dataType = "String")
+    @ApiModelProperty(value = "발신자 닉네임", dataType = "String", example = "gorany")
     private String nickname;
 
     //profile
-//    @ApiModelProperty(example = "발신자 프로필 ID", dataType = "Long")
+//    @ApiModelProperty(value = "발신자 프로필 ID", dataType = "Long")
 //    private Long profileId;
 
-    @ApiModelProperty(example = "발신자 프로필 ID", dataType = "Long")
+    @ApiModelProperty(value = "발신자 프로필 ID", dataType = "Long")
     private String profileId;
-    @ApiModelProperty(example = "발신자 프로필 파일명", dataType = "String")
+    @ApiModelProperty(value = "발신자 프로필 파일명", dataType = "String")
     private String profileName;
-    @ApiModelProperty(example = "발신자 프로필 경로", dataType = "String")
+    @ApiModelProperty(value = "발신자 프로필 경로", dataType = "String")
     private String profilePath;
 
     //chatRoom
-    @ApiModelProperty(example = "채팅방 ID", dataType = "Long")
+    @ApiModelProperty(value = "채팅방 ID", dataType = "Long")
     private Long chatRoomId;
-    @ApiModelProperty(example = "채팅방 이름", dataType = "String")
+    @ApiModelProperty(value = "채팅방 이름", dataType = "String")
     private String chatRoomName;
 }

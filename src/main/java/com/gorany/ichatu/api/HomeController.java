@@ -12,13 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
 @Slf4j
 @RequestMapping(value = "/api/v1")
 @RequiredArgsConstructor
-@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
 public class HomeController {
 
     private static final TokenStorage storage = TokenStorage.getInstance();
@@ -45,24 +45,20 @@ public class HomeController {
         String password = memberDTO.getPassword();
         String token = memberDTO.getToken();
 
-        System.out.println("nickname = " + nickname);
-        System.out.println("password = " + password);
-        System.out.println("token = " + token);
-
         /* request for login
         *  if success -> save TOKEN
         *  else -> do nothing
         * */
         MemberDTO result = memberService.login(memberDTO);
-        System.out.println("result = " + result);
-        if(result != null){
+
+        if(result != null){ //로그인 성공
             map.put(result.getId(), token);
 
             log.info(String.format("[LOGIN SUCCESS] => nickname : %s, password : %s, token : %s", nickname, password, token));
-            System.out.println("result = " + result);
+
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        else{
+        else{ //로그인 실패
             log.info(String.format("[LOGIN FAILED] => nickname : %s, password : %s, token : %s", nickname, password, token));
             return new ResponseEntity<>("fail", HttpStatus.OK);
         }

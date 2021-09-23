@@ -27,7 +27,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
+//@CrossOrigin({"http://localhost:3000", "https://ichatu.ga"})
 public class StompController {
 
     private final SimpMessagingTemplate template;
@@ -95,7 +95,7 @@ public class StompController {
 
         /* push notification to RabbitMQ */
         notificationService.sendChatNotification(chatDTO);
-        System.out.println("chatDTO = " + chatDTO);
+        //System.out.println("chatDTO = " + chatDTO);
         /* Send to other subcribers */
         template.convertAndSend("/sub/room/" + chatDTO.getChatRoomId(), chatDTO);
     }
@@ -107,7 +107,7 @@ public class StompController {
         Long cid = chatDTO.getChatRoomId();
 
         Set<Long> members = checkMap.get(cid);
-        System.out.println("----------------------------------------------");
+
         members.remove(mid);
 
         if(members.isEmpty()) {

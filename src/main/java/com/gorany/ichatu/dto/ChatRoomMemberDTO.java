@@ -13,16 +13,16 @@ import lombok.*;
 @Builder(access = AccessLevel.PROTECTED)
 public class ChatRoomMemberDTO {
 
-    @ApiModelProperty(example = "멤버 ID")
+    @ApiModelProperty(value = "멤버 ID")
     private Long memberId;
-    @ApiModelProperty(example = "멤버 닉네임")
+    @ApiModelProperty(value = "멤버 닉네임")
     private String nickname;
 
-    @ApiModelProperty(example = "멤버의 프로필 ID")
+    @ApiModelProperty(value = "멤버의 프로필 ID")
     private String profileId;
-    @ApiModelProperty(example = "멤버의 프로필 파일명")
+    @ApiModelProperty(value = "멤버의 프로필 파일명")
     private String profileName;
-    @ApiModelProperty(example = "멤버의 프로필 경로")
+    @ApiModelProperty(value = "멤버의 프로필 경로")
     private String profilePath;
 
     public static ChatRoomMemberDTO createChatRoomMemberDTO(Join j){

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/v1/joins")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin({"https://ichatu.ga", "http://localhost:3000"})
 public class JoinController {
 
     private final JoinService joinService;
