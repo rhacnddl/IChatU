@@ -100,7 +100,7 @@ public class NotificationServiceImpl implements NotificationService{
         Set<Long> members = checkMap.get(chatDTO.getChatRoomId());
 
         List<Notification> notificationList = memberIdList.stream()
-                .filter(id -> id != sender.getId())
+                //.filter(id -> id != sender.getId())
                 .filter(id -> !members.contains(id))
                 .map(id -> {
                     Member receiver = Member.builder().id(id).build();
