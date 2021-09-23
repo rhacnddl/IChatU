@@ -64,7 +64,7 @@ public class StompController {
             Set<Long> members = new HashSet<>();
             members.add(mid);
 
-            checkMap.put(mid, members);
+            checkMap.put(cid, members);
         }
         //template.convertAndSend("/sub/room/" + chatDTO.getChatRoomId(), chatDTO);
     }
