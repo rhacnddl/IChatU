@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService{
     private String COMMENT_QUEUE_NAME;
 
     private static final CheckStorage checkStorage = CheckStorage.getInstance();
-    private final Map<Long, Set<Long>> checkMap = checkStorage.getCheckMap();
+    private Map<Long, Set<Long>> checkMap;
 
     private static final TokenStorage storage = TokenStorage.getInstance();
     private final Map<Long, String> map = storage.getMap();
@@ -45,6 +46,11 @@ public class NotificationServiceImpl implements NotificationService{
     private final RabbitTemplate template;
     private final JoinRepository joinRepository;
     private final NotificationRepository notificationRepository;
+
+    @PostConstruct
+    private void init(){
+        this.checkMap = checkStorage.getCheckMap();
+    }
 
     //미확인 알림 개수 확인
     @Override
@@ -123,6 +129,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    @Transactional
     public Integer updateNotificationsByChatRoomAndMember(Long chatRoomId, Long memberId) {
 
         Member receiver = Member.builder().id(memberId).build();
