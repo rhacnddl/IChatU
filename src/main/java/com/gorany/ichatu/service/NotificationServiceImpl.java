@@ -98,9 +98,11 @@ public class NotificationServiceImpl implements NotificationService{
         //System.out.println(sender);
         /* define receiver and change to Notification (발신자 == 수신자 인 것 제외) OR (채팅방에 접속한 사람 제외) */
         Set<Long> members = checkMap.get(chatDTO.getChatRoomId());
+        members.forEach(System.out::println);
 
         List<Notification> notificationList = memberIdList.stream()
-                    .filter(id -> id != sender.getId() || !members.contains(id))
+                .filter(id -> !members.contains(id))
+//                    .filter(id -> id != sender.getId() || !members.contains(id))
                     .map(id -> {
                         Member receiver = Member.builder().id(id).build();
                         //System.out.println(receiver);
