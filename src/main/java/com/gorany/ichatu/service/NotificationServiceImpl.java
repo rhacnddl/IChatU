@@ -98,15 +98,26 @@ public class NotificationServiceImpl implements NotificationService{
         //System.out.println(sender);
         /* define receiver and change to Notification (발신자 == 수신자 인 것 제외) OR (채팅방에 접속한 사람 제외) */
         Set<Long> members = checkMap.get(chatDTO.getChatRoomId());
+        List<Notification> notificationList;
 
-        List<Notification> notificationList = memberIdList.stream()
-                //.filter(id -> id != sender.getId())
-                .filter(id -> !members.contains(id))
-                .map(id -> {
-                    Member receiver = Member.builder().id(id).build();
-                    //System.out.println(receiver);
-                    return chatToNotification(chatDTO, sender, receiver);
-                }).collect(Collectors.toList());
+        if(members == null){
+            notificationList = memberIdList.stream()
+                    .filter(id -> id != sender.getId())
+                    .map(id -> {
+                        Member receiver = Member.builder().id(id).build();
+                        //System.out.println(receiver);
+                        return chatToNotification(chatDTO, sender, receiver);
+                    }).collect(Collectors.toList());
+        }
+        else{
+            notificationList = memberIdList.stream()
+                    .filter(id -> !members.contains(id))
+                    .map(id -> {
+                        Member receiver = Member.builder().id(id).build();
+                        //System.out.println(receiver);
+                        return chatToNotification(chatDTO, sender, receiver);
+                    }).collect(Collectors.toList());
+        }
 
         /* save Notification */
         notificationRepository.saveAll(notificationList);

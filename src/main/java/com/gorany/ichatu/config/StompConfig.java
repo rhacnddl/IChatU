@@ -54,19 +54,19 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 //                .setClientLogin("guest");;
     }
 
-    @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-        registry.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
-            @Override
-            public WebSocketHandler decorate(WebSocketHandler handler) {
-                return new WebSocketHandlerDecorator(handler) {
-
-                    @Override
-                    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-
-                    }
-                };
-            }
-        });
-    }
+//    @Override
+//    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+//        registry.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
+//            @Override
+//            public WebSocketHandler decorate(WebSocketHandler handler) {
+//                return new WebSocketHandlerDecorator(handler) {
+//
+//                    @Override
+//                    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+//
+//                    }
+//                };
+//            }
+//        });
+//    }
 }
