@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService{
     private String COMMENT_QUEUE_NAME;
 
     private static final CheckStorage checkStorage = CheckStorage.getInstance();
-    private final Map<Long, List<Long>> checkMap = checkStorage.getCheckMap();
+    private final Map<Long, Set<Long>> checkMap = checkStorage.getCheckMap();
 
     private static final TokenStorage storage = TokenStorage.getInstance();
     private final Map<Long, String> map = storage.getMap();
@@ -90,7 +91,7 @@ public class NotificationServiceImpl implements NotificationService{
                 .build();
         //System.out.println(sender);
         /* define receiver and change to Notification (발신자 == 수신자 인 것 제외) OR (채팅방에 접속한 사람 제외) */
-        List<Long> members = checkMap.get(chatDTO.getChatRoomId());
+        Set<Long> members = checkMap.get(chatDTO.getChatRoomId());
 
         List<Notification> notificationList = memberIdList.stream()
                 .filter(id -> id != sender.getId())

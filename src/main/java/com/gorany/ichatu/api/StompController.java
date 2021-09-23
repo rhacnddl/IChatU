@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,7 +42,7 @@ public class StompController {
     private final static BufferStorage bufferStorage = BufferStorage.getInstance();
     private Map<Long, List<ChatDTO>> bufferMap;
     private final static CheckStorage checkStorage = CheckStorage.getInstance();
-    private Map<Long, List<Long>> checkMap;
+    private Map<Long, Set<Long>> checkMap;
 
     @PostConstruct
     private void init(){
@@ -64,7 +61,7 @@ public class StompController {
             checkMap.get(cid).add(mid);
         }
         else {
-            List<Long> members = new ArrayList<>();
+            Set<Long> members = new HashSet<>();
             members.add(mid);
 
             checkMap.put(mid, members);
@@ -109,8 +106,8 @@ public class StompController {
         Long mid = chatDTO.getMemberId();
         Long cid = chatDTO.getChatRoomId();
 
-        List<Long> members = checkMap.get(cid);
-
+        Set<Long> members = checkMap.get(cid);
+        System.out.println("----------------------------------------------");
         members.remove(mid);
 
         if(members.isEmpty()) {

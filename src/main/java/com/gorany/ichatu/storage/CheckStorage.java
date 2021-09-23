@@ -4,11 +4,12 @@ package com.gorany.ichatu.storage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CheckStorage {
 
     public static CheckStorage instance;
-    private Map<Long, List<Long>> checkMap;
+    private Map<Long, Set<Long>> checkMap;
 
     private CheckStorage(){
         checkMap = new HashMap<>();
@@ -21,7 +22,7 @@ public class CheckStorage {
         return instance;
     }
 
-    public Map<Long, List<Long>> getCheckMap(){
+    public Map<Long, Set<Long>> getCheckMap(){
         return checkMap;
     }
 }
