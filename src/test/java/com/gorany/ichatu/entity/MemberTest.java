@@ -30,5 +30,6 @@ public class MemberTest {
         assertThat(member.getProfile().getPath()).isNull();
 
         System.out.println("hello");
+        System.out.println("hello");
     }
 }
