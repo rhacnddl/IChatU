@@ -28,5 +28,7 @@ public class MemberTest {
         assertThat(member.getProfile().getId()).isNull();
         assertThat(member.getProfile().getName()).isNull();
         assertThat(member.getProfile().getPath()).isNull();
+
+        System.out.println("hello");
     }
 }

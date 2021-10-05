@@ -12,6 +12,8 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+
+    jar.archiveName = 'ichatu-api.jar'
 }
 
 repositories {
