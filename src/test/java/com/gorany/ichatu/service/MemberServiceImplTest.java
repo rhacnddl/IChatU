@@ -54,10 +54,15 @@ class MemberServiceImplTest {
         Profile profile = Profile.builder().id(UUID.randomUUID().toString()).name("파일").path("경로").build();
         Member member = Member.builder().nickname("test").password("12345").email("test@naver.com").build();
         em.persist(member);
+
+        Long id = member.getId();
         member.changeProfile(profile);
 
+        em.flush();
+        em.clear();
+
         MemberDropRequest request = new MemberDropRequest();
-        request.setId(1L);
+        request.setId(id);
         request.setPassword("12345");
 
         em.flush();
