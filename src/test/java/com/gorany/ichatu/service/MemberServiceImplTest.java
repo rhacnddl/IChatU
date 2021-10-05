@@ -48,7 +48,7 @@ class MemberServiceImplTest {
 
     @Test
     @DisplayName("회원탈퇴 테스트")
-    public void 회원탈퇴_테스트() throws Exception{
+    public void 회원탈퇴_테스트() {
 
         //given
         Profile profile = Profile.builder().id(UUID.randomUUID().toString()).name("파일").path("경로").build();
@@ -70,7 +70,6 @@ class MemberServiceImplTest {
         assertThat(result).isTrue();
         assertThat(find.getNickname()).isEqualTo("탈퇴한 사용자");
         assertThat(find.getEmail()).isNull();
-        assertThat(find.getProfile().getId()).isNull();
     }
 
     @Test
