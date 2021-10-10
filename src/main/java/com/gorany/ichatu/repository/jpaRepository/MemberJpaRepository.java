@@ -15,8 +15,15 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * JPA -> Spring Data JPA로 인한 Deprecated
+ * @deprecated
+ * @author gorany
+ * @version 1.0
+ * */
 @Repository
 @RequiredArgsConstructor
+@Deprecated
 public class MemberJpaRepository {
 
     @PersistenceContext
@@ -52,7 +59,7 @@ public class MemberJpaRepository {
                     .setParameter("password", member.getPassword())
                     .getResultList();
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
         /* 로그인 성공이라 판단되면 최근 로그인 시간 갱신 */
         if(find.size() > 0) {
@@ -61,7 +68,7 @@ public class MemberJpaRepository {
             return Optional.of(result);
         }
 
-        return Optional.ofNullable(null);
+        return Optional.empty();
     }
 
     /* Member 정보 변경 Dirty Checking

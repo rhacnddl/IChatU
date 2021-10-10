@@ -11,8 +11,11 @@ public interface MemberService {
     Long signup(MemberDTO memberDTO);
     MemberDTO login(MemberDTO memberDTO);
     void logout(Long id);
-    /* Member or Profile 변경 */
-    String updateMember(MemberDTO memberDTO);
+    /**
+     * 멤버 정보 수정 및 프로필 수정
+     * @param memberDTO 요청자(Profile 가지고 있을 수 있음)
+     * */
+    void updateMember(MemberDTO memberDTO);
     /* Member + Profile 조회 */
     MemberProfileDTO getMemberInfo(Long id);
     /* Password 변경! */

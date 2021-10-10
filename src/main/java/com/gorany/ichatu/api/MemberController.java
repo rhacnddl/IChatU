@@ -76,9 +76,9 @@ public class MemberController {
         if(profileDTO != null)
             memberDTO.setProfileDTO(profileDTO);
 
-        String profileId = memberService.updateMember(memberDTO);
+        memberService.updateMember(memberDTO);
 
-        return new ResponseEntity<>(profileId, HttpStatus.OK);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
 }
