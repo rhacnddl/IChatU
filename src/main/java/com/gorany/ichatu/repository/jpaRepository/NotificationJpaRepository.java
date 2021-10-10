@@ -13,8 +13,12 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * JPA -> Spring Data JPA로 넘어가며 Deprecated
+ */
 @Repository
 @RequiredArgsConstructor
+@Deprecated
 public class NotificationJpaRepository {
 
     @PersistenceContext

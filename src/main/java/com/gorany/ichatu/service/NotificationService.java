@@ -99,10 +99,12 @@ public interface NotificationService {
      * 알림 단건 확인 -> checkOne()
      * @deprecated
      */
+    @Deprecated
     Integer checkNotification(Long notificationId);
     /**
      * 알림 모두 제거 -> removeAll()
      * @deprecated
      */
+    @Deprecated
     Integer removeNotifications(Long memberId);
 }

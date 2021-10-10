@@ -195,6 +195,7 @@ public class NotificationServiceImpl implements NotificationService{
     /* Deprecated */
     @Override
     @Transactional
+    @Deprecated
     public Integer removeNotifications(Long memberId) {
 
         Member receiver = Member.builder().id(memberId).build();
@@ -204,6 +205,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
     @Override
     @Transactional
+    @Deprecated
     public Integer checkNotification(Long notificationId) {
         //return notificationJpaRepository.update(notificationId);
         return null;
