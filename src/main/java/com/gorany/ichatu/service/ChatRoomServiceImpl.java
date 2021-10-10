@@ -6,9 +6,9 @@ import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomMemberDTO;
+import com.gorany.ichatu.repository.NotificationRepository;
 import com.gorany.ichatu.repository.jpaRepository.ChatRoomJpaRepository;
 import com.gorany.ichatu.repository.jpaRepository.JoinJpaRepository;
-import com.gorany.ichatu.repository.jpaRepository.NotificationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ChatRoomServiceImpl implements ChatRoomService {
 
-    private final NotificationJpaRepository notificationJpaRepository;
+    //private final NotificationJpaRepository notificationJpaRepository;
+    private final NotificationRepository notificationRepository;
     private final ChatRoomJpaRepository chatRoomJpaRepository;
     private final JoinJpaRepository joinJpaRepository;
 
@@ -55,7 +56,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         log.info("# ChatRoomService -> ChatRoomRepository.remove(ChatRoom)");
 
-        notificationJpaRepository.removeAllByChatRoom(chatRoom);
+        notificationRepository.removeAllByChatRoom(chatRoom.getId());
         joinJpaRepository.removeAll(chatRoom);
 
         return chatRoomJpaRepository.remove(chatRoom);

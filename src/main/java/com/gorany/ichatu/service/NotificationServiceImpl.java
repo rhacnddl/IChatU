@@ -5,7 +5,6 @@ import com.gorany.ichatu.dto.ChatDTO;
 import com.gorany.ichatu.dto.NotificationDTO;
 import com.gorany.ichatu.repository.NotificationRepository;
 import com.gorany.ichatu.repository.jpaRepository.JoinJpaRepository;
-import com.gorany.ichatu.repository.jpaRepository.NotificationJpaRepository;
 import com.gorany.ichatu.storage.CheckStorage;
 import com.gorany.ichatu.storage.TokenStorage;
 import lombok.RequiredArgsConstructor;
