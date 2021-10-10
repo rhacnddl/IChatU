@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 class ChatRoomServiceTest {
 

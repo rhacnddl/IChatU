@@ -69,6 +69,7 @@ public class NotificationJpaRepository {
      * 단건 알림 확인은 도메인에서 처리하기로 함.
      * @deprecated
      */
+    @Deprecated
     public Integer update(Long notificationId){
 
         String query = "update Notification nt set nt.confirm = '1' where nt.id = :id";
@@ -90,6 +91,7 @@ public class NotificationJpaRepository {
     /**
      * @deprecated
      */
+    @Deprecated
     public Integer updateByChatRoom(Member receiver, Long chatRoomId){
         String query = "update Notification nt set nt.confirm = '1' where nt.receiver = :receiver and nt.confirm = :value and nt.targetId = :targetId";
 

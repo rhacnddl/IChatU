@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 class NotificationJpaRepositoryTest {
 

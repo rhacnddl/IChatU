@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 class JoinServiceTest {
 

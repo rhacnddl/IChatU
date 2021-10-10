@@ -15,7 +15,6 @@ import static com.gorany.ichatu.domain.Member.builder;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 class MemberJpaRepositoryTest {
 
