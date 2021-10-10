@@ -3,20 +3,15 @@ package com.gorany.ichatu.service;
 import static org.assertj.core.api.Assertions.*;
 
 import com.gorany.ichatu.domain.ChatRoom;
-import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
-import com.gorany.ichatu.repository.ChatRoomRepository;
-import com.gorany.ichatu.repository.JoinRepository;
-import com.gorany.ichatu.repository.MemberRepository;
+import com.gorany.ichatu.repository.jpaRepository.ChatRoomJpaRepository;
+import com.gorany.ichatu.repository.jpaRepository.MemberJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -24,8 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class JoinServiceTest {
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired ChatRoomRepository chatRoomRepository;
+    @Autowired
+    MemberJpaRepository memberJpaRepository;
+    @Autowired
+    ChatRoomJpaRepository chatRoomJpaRepository;
     @Autowired JoinService joinService;
 
     @Test
@@ -36,8 +33,8 @@ class JoinServiceTest {
         Member requester = Member.builder().nickname("User A").build();
         ChatRoom target = ChatRoom.builder().name("ChatRoom B").build();
 
-        Long memberId = memberRepository.save(requester);
-        Long chatRoomId = chatRoomRepository.save(target);
+        Long memberId = memberJpaRepository.save(requester);
+        Long chatRoomId = chatRoomJpaRepository.save(target);
 
         //when
         Long joinId = joinService.joinChatRoom(chatRoomId, memberId);
@@ -54,8 +51,8 @@ class JoinServiceTest {
         Member requester = Member.builder().nickname("User A").build();
         ChatRoom target = ChatRoom.builder().name("ChatRoom B").build();
 
-        Long memberId = memberRepository.save(requester);
-        Long chatRoomId = chatRoomRepository.save(target);
+        Long memberId = memberJpaRepository.save(requester);
+        Long chatRoomId = chatRoomJpaRepository.save(target);
 
         Long joinId = joinService.joinChatRoom(chatRoomId, memberId);
 

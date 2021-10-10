@@ -21,11 +21,17 @@ public interface NotificationService {
     /* 알림 모두 확인 : confirm column (0 -> 1) */
     Integer checkNotifications(Long memberId);
 
-    /* 알림 단건 확인 */
-    Integer checkNotification(Long notificationId);
+    /**
+     * 알림 단건 확인
+     * @param notificationId 확인할 알림 ID
+     */
+    void checkOne(Long notificationId);
 
-    /* 알림 모두 제거 */
-    Integer removeNotifications(Long memberId);
+    /**
+     * 알림 모두 제거
+     * @param memberId 요청자 ID
+     */
+    void removeAll(Long memberId);
 
     /* 알림 목록 조회 */
     List<NotificationDTO> getNotificationList(Long memberId, Integer page);
@@ -88,4 +94,15 @@ public interface NotificationService {
                 .build();
     }
 
+    /* Deprecated */
+    /**
+     * 알림 단건 확인 -> checkOne()
+     * @deprecated
+     */
+    Integer checkNotification(Long notificationId);
+    /**
+     * 알림 모두 제거 -> removeAll()
+     * @deprecated
+     */
+    Integer removeNotifications(Long memberId);
 }

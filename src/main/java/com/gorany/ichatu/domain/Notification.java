@@ -30,4 +30,12 @@ public class Notification extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Member receiver;
+
+    /*
+    * Domain Business Methods
+    * */
+    //알림 미확인 -> 확인
+    public void confirm(){
+        this.confirm = '1';
+    }
 }

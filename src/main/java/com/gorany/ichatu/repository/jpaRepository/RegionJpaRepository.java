@@ -1,4 +1,4 @@
-package com.gorany.ichatu.repository;
+package com.gorany.ichatu.repository.jpaRepository;
 
 import com.gorany.ichatu.domain.Region;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Repository
-public class RegionRepository {
+public class RegionJpaRepository {
 
     @PersistenceContext
     private EntityManager em;

@@ -3,21 +3,25 @@ package com.gorany.ichatu.service;
 import com.gorany.ichatu.domain.*;
 import com.gorany.ichatu.dto.ChatDTO;
 import com.gorany.ichatu.dto.NotificationDTO;
-import com.gorany.ichatu.repository.JoinRepository;
 import com.gorany.ichatu.repository.NotificationRepository;
+import com.gorany.ichatu.repository.jpaRepository.JoinJpaRepository;
+import com.gorany.ichatu.repository.jpaRepository.NotificationJpaRepository;
 import com.gorany.ichatu.storage.CheckStorage;
 import com.gorany.ichatu.storage.TokenStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,7 +48,8 @@ public class NotificationServiceImpl implements NotificationService{
     private final String COMMENT_ROUTING_KEY = "comment.";
 
     private final RabbitTemplate template;
-    private final JoinRepository joinRepository;
+    private final JoinJpaRepository joinJpaRepository;
+    //private final NotificationJpaRepository notificationJpaRepository;
     private final NotificationRepository notificationRepository;
 
     @PostConstruct
@@ -55,6 +60,7 @@ public class NotificationServiceImpl implements NotificationService{
     //미확인 알림 개수 확인
     @Override
     public Long getNotConfirmedCount(Long memberId) {
+        //return notificationJpaRepository.getCount(Member.builder().id(memberId).build());
         return notificationRepository.getCount(Member.builder().id(memberId).build());
     }
 
@@ -75,7 +81,7 @@ public class NotificationServiceImpl implements NotificationService{
         });*/
 
         /* get all User List in ChatRoom */
-        List<Long> memberIdList = joinRepository.findMemberIdsByChatRoom(ChatRoom.builder().id(chatDTO.getChatRoomId()).build()).get();
+        List<Long> memberIdList = joinJpaRepository.findMemberIdsByChatRoom(ChatRoom.builder().id(chatDTO.getChatRoomId()).build()).get();
 
         /* send -> Database & return DTO List*/
         List<NotificationDTO> notificationDTOList = saveAndTransform(memberIdList, chatDTO);
@@ -95,17 +101,16 @@ public class NotificationServiceImpl implements NotificationService{
                 .id(chatDTO.getMemberId())
                 .nickname(chatDTO.getNickname())
                 .build();
-        //System.out.println(sender);
         /* define receiver and change to Notification (발신자 == 수신자 인 것 제외) OR (채팅방에 접속한 사람 제외) */
         Set<Long> members = checkMap.get(chatDTO.getChatRoomId());
-        members.forEach(System.out::println);
+        //members.forEach(System.out::println);
 
         List<Notification> notificationList = memberIdList.stream()
                 .filter(id -> !members.contains(id))
 //                    .filter(id -> id != sender.getId() || !members.contains(id))
                     .map(id -> {
                         Member receiver = Member.builder().id(id).build();
-                        //System.out.println(receiver);
+
                         return chatToNotification(chatDTO, sender, receiver);
                     }).collect(Collectors.toList());
 
@@ -135,13 +140,16 @@ public class NotificationServiceImpl implements NotificationService{
 
         Member receiver = Member.builder().id(memberId).build();
 
-        return notificationRepository.updateAllByChatRoomAndMember(chatRoomId, receiver);
+        //return notificationJpaRepository.updateAllByChatRoomAndMember(chatRoomId, receiver);
+        return notificationRepository.updateAllByChatRoomAndMember(receiver, chatRoomId);
     }
 
     @Override
     @Transactional
-    public Integer checkNotification(Long notificationId) {
-        return notificationRepository.update(notificationId);
+    public void checkOne(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() -> new IllegalArgumentException("찾는 결과가 없습니다."));
+
+        notification.confirm();
     }
 
     @Override
@@ -150,7 +158,11 @@ public class NotificationServiceImpl implements NotificationService{
         /* Long -> Member */
         Member receiver = Member.builder().id(memberId).build();
         /* get Entities */
-        List<Notification> entities = notificationRepository.findAllByMemberId(receiver, page).get();
+        //List<Notification> entities = notificationJpaRepository.findAllByMemberId(receiver, page).get();
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        Slice<Notification> slices = notificationRepository.findAllByMemberId(receiver, pageable);
+        List<Notification> entities = slices.getContent();
         /* convert entities -> DTOs */
         List<NotificationDTO> dtos = entities.stream().map(en -> {
 
@@ -159,8 +171,6 @@ public class NotificationServiceImpl implements NotificationService{
 
             return entityToDTO(en, sender, profile);
         }).collect(Collectors.toList());
-
-        //dtos.forEach(System.out::println);
 
         return dtos;
     }
@@ -171,16 +181,32 @@ public class NotificationServiceImpl implements NotificationService{
 
         Member receiver = Member.builder().id(memberId).build();
 
+        //return notificationJpaRepository.updateAll(receiver);
         return notificationRepository.updateAll(receiver);
     }
 
+    @Override
+    @Transactional
+    public void removeAll(Long memberId) {
+
+        Member receiver = Member.builder().id(memberId).build();
+        notificationRepository.deleteAll(receiver);
+    }
+
+    /* Deprecated */
     @Override
     @Transactional
     public Integer removeNotifications(Long memberId) {
 
         Member receiver = Member.builder().id(memberId).build();
 
-        return notificationRepository.deleteAll(receiver);
+        //return notificationJpaRepository.deleteAll(receiver);
+        return null;
     }
-
+    @Override
+    @Transactional
+    public Integer checkNotification(Long notificationId) {
+        //return notificationJpaRepository.update(notificationId);
+        return null;
+    }
 }

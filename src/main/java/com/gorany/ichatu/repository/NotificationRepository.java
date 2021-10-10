@@ -3,113 +3,73 @@ package com.gorany.ichatu.repository;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.Notification;
-import com.gorany.ichatu.exception.NoIdentityException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Optional;
+/**
+* Notification 테이블을 이용하기 위한 Spring Data JPA Repository
+* @author gorany
+* @version 1.0
+*/
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-@Repository
-@RequiredArgsConstructor
-public class NotificationRepository {
+    /**
+    * 일부 알림 목록 조회
+    * @param receiver 조회 요청자
+    * @param pageable 페이징 및 정렬 정보
+    * @return Slice<Notification> 알림 목록 ([더보기]로 페이징 할 것이므로 Page보다 Slice가 적합)
+    */
+    @Query(value = "select nt from Notification nt " +
+            "left join fetch nt.sender s " +
+            "left join fetch s.profile " +
+            "where nt.receiver = :receiver ")
+    Slice<Notification> findAllByMemberId(@Param("receiver") Member receiver, Pageable pageable);
 
-    @PersistenceContext
-    private final EntityManager em;
+    /**
+     * 미확인 알림 개수 조회
+     * @param receiver 조회 요청자
+     * @return Long 미확인 알림 개수
+     */
+    @Query("select count(nt) from Notification nt where nt.receiver = :receiver and nt.confirm = '0'")
+    Long getCount(@Param("receiver") Member receiver);
 
-    public Optional<Notification> findById(Long id){
-        return Optional.ofNullable(em.find(Notification.class, id));
-    }
+    /**
+     * 모든 알림 확인
+     * @param receiver 업데이트 요청자
+     * @return int 업데이트된 개수
+     */
+    @Modifying
+    @Query("update Notification nt set nt.confirm = '1' where nt.receiver = :receiver and nt.confirm = '0'")
+    int updateAll(@Param("receiver") Member receiver);
 
-    public Long save(Notification notification){
+    /**
+     * 유저가 채팅방에 입장하면 해당 채팅방의 미확인 알림 모두 확인
+     * @param receiver 업데이트 요청자
+     * @param chatRoomId 채팅방 ID
+     * @return int 업데이트된 개수
+     */
+    @Modifying
+    @Query("update Notification n set n.confirm = '1' where n.confirm = '0' and n.receiver = :receiver and n.targetId = :chatRoomId")
+    int updateAllByChatRoomAndMember(@Param("receiver") Member receiver, @Param("chatRoomId") Long chatRoomId);
 
-        em.persist(notification);
-        return notification.getId();
-    }
+    /**
+     * 확인한 알림 모두 제거
+     * @param receiver 제거 요청자
+     */
+    @Modifying
+    @Query("delete from Notification nt where nt.receiver = :receiver and nt.confirm = '1'")
+    void deleteAll(@Param("receiver") Member receiver);
 
-    public void saveAll(List<Notification> notifications){
-
-        notifications.forEach(em::persist);
-    }
-
-    //알림 목록 조회 (일부)
-    public Optional<List<Notification>> findAllByMemberId(Member member, Integer page){
-        int size = 10;
-        int offset = (page - 1) * size;
-        String query = "select nt from Notification nt " +
-                "left join fetch nt.sender s " +
-                "left join fetch s.profile " +
-                "where nt.receiver = :receiver ";
-                //"and nt.confirm = :value"; //미확인 알림만 조회하려고 했으나 변경
-
-        return Optional.ofNullable(em.createQuery(query, Notification.class)
-                .setParameter("receiver", member)
-                //.setParameter("value", '0')
-                .setMaxResults(size)
-                .setFirstResult(offset)
-                .getResultList());
-    }
-
-    //미확인 알림 몇 개인지 반환
-    public Long getCount(Member receiver){
-        return em.createQuery("select count(nt) from Notification nt where nt.receiver = :receiver and nt.confirm = '0'", Long.class)
-                .setParameter("receiver", receiver)
-                .getSingleResult();
-    }
-
-    //알림 확인 (단건)
-    public Integer update(Long notificationId){
-
-        String query = "update Notification nt set nt.confirm = '1' where nt.id = :id";
-
-        return em.createQuery(query).setParameter("id", notificationId).executeUpdate();
-    }
-
-    //알림 확인 (모두)
-    public Integer updateAll(Member receiver){
-        String query = "update Notification nt set nt.confirm = '1' where nt.receiver = :receiver and nt.confirm = :value";
-
-        return em.createQuery(query)
-                .setParameter("receiver", receiver)
-                .setParameter("value", '0')
-                .executeUpdate();
-    }
-
-    //알림 확인(채팅방)
-    public Integer updateByChatRoom(Member receiver, Long chatRoomId){
-        String query = "update Notification nt set nt.confirm = '1' where nt.receiver = :receiver and nt.confirm = :value and nt.targetId = :targetId";
-
-        return em.createQuery(query)
-                .setParameter("targetId", chatRoomId)
-                .setParameter("receiver", receiver)
-                .setParameter("value", '0')
-                .executeUpdate();
-    }
-
-    //확인한 알림 전부 제거
-    public Integer deleteAll(Member receiver){
-        String query = "delete from Notification nt where nt.receiver = :receiver and nt.confirm = '1'";
-
-        return em.createQuery(query).setParameter("receiver", receiver).executeUpdate();
-    }
-
-    //특정 채팅방에 쌓인 알림 모두 확인 처리
-    //사용자가 채팅방 입장 시 호출되는 메서드
-    public Integer updateAllByChatRoomAndMember(Long chatRoomId, Member member){
-
-        return em.createQuery("update Notification n set n.confirm = '1' where n.confirm = '0' and n.receiver = :member and n.targetId = :chatRoomId")
-                .setParameter("member", member)
-                .setParameter("chatRoomId", chatRoomId)
-                .executeUpdate();
-    }
-
-    //채팅방에 의해 알림 모두 제거
-    public Integer removeAllByChatRoom(ChatRoom chatRoom){
-        return em.createQuery("delete from Notification n where n.targetId = :targetId")
-                .setParameter("targetId", chatRoom.getId())
-                .executeUpdate();
-    }
+    /**
+     * 채팅방 제거될 때 해당 채팅방의 알림을 모두 제거
+     * @param chatRoomId 제거되는 채팅방 ID
+     */
+    @Modifying
+    @Query("delete from Notification n where n.targetId = :chatRoomId")
+    void removeAllByChatRoom(@Param("chatRoomId") Long chatRoomId);
 }

@@ -7,7 +7,7 @@ import com.gorany.ichatu.dto.MemberDTO;
 import com.gorany.ichatu.dto.MemberDropRequest;
 import com.gorany.ichatu.dto.MemberPasswordRequest;
 import com.gorany.ichatu.dto.MemberProfileDTO;
-import com.gorany.ichatu.repository.MemberRepository;
+import com.gorany.ichatu.repository.jpaRepository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository memberRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
     @Override
     public MemberDTO getOne(Long memberId) {
 
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberJpaRepository.findById(memberId).get();
 
         return entityToDTO(member, null);
     }
@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
     public Long signup(MemberDTO memberDTO) {
 
         /* 중복된 닉네임 CHECK */
-        if(memberRepository.findByNickname(memberDTO.getNickname()) > 0L){
+        if(memberJpaRepository.findByNickname(memberDTO.getNickname()) > 0L){
             return -1L;
         }
 
@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = dtoToEntity(memberDTO);
 
         /* persist */
-        Long id = memberRepository.save(member);
+        Long id = memberJpaRepository.save(member);
 
         return id;
     }
@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberDTO login(MemberDTO memberDTO) {
 
         Member member = dtoToEntity(memberDTO);
-        Optional<Member> temp = memberRepository.match(member);
+        Optional<Member> temp = memberJpaRepository.match(member);
 
         return temp.isPresent()? entityToDTO(temp.get(), temp.get().getProfile()) : null;
     }
@@ -75,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
     public String updateMember(MemberDTO memberDTO) {
         Member member = dtoToEntity(memberDTO);
 
-        memberRepository.updateMember(member);
+        memberJpaRepository.updateMember(member);
 
         Profile profile = member.getProfile();
 
@@ -84,7 +84,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberProfileDTO getMemberInfo(Long id) {
-        Optional<Member> temporary = memberRepository.findMemberWithProfile(Member.builder().id(id).build());
+        Optional<Member> temporary = memberJpaRepository.findMemberWithProfile(Member.builder().id(id).build());
 
         if(temporary.isEmpty()) return null;
 
@@ -96,7 +96,7 @@ public class MemberServiceImpl implements MemberService {
     public Boolean updatePassword(MemberPasswordRequest request) {
 
         /* 기존 멤버를 찾는다. */
-        Member member = memberRepository.findMemberWithProfile(Member.builder().id(request.getId()).build()).get();
+        Member member = memberJpaRepository.findMemberWithProfile(Member.builder().id(request.getId()).build()).get();
         /* 기존 비밀번호와 동일한지 체크한다. */
         Boolean isCorrect  = member.isCorrectPassword(request.getOldPassword());
         /* 다를 때 */
@@ -114,7 +114,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member source = Member.builder().id(request.getId()).build();
         /* 멤버 정보 가져오기 */
-        Member member = memberRepository.findMemberWithProfile(source).get();
+        Member member = memberJpaRepository.findMemberWithProfile(source).get();
 
         /* 요청자의 비밀번호가 일치한지? */
         Boolean isCorrect = member.isCorrectPassword(request.getPassword());

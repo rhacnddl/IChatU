@@ -33,13 +33,12 @@ public class NotificationController {
     /* deprecated */
     @PostMapping("/{id}/confirm")
     @ApiOperation(value = "단건 알림 확인", notes = "특정 알림 하나를 확인 처리한다.")
-    public ResponseEntity<String> checkNotification(@PathVariable("id") Long notificationId){
+    public ResponseEntity<String> checkNotification(@PathVariable("id") Long notificationId) throws IllegalArgumentException{
 
         log.info("# NotificationController -> checkNotification(Long)");
-        Integer updateCount = notificationService.checkNotification(notificationId);
+        notificationService.checkOne(notificationId);
 
-        return updateCount == 1? new ResponseEntity<>("success", HttpStatus.OK) :
-                new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @GetMapping("/{memberId}")
