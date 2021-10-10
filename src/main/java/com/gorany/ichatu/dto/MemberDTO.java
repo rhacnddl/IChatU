@@ -42,6 +42,7 @@ public class MemberDTO {
     @ApiModelProperty(value = "사용자 프로필")
     private ProfileDTO profileDTO;
     @ApiModelProperty(value = "사용자 알림 목록")
+    @Builder.Default
     private List<NotificationDTO> notificationDTOList = new ArrayList<>();
 
     @ApiModelProperty(value = "사용자 토큰")

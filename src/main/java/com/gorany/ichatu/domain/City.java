@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@ToString(exclude = "")
 public class City {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

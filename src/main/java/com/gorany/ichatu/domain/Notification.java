@@ -9,7 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@ToString(exclude = {"sender, receiver"})
+@ToString(exclude = {"sender", "receiver"})
 public class Notification extends BaseEntity{
 
     @Id @GeneratedValue
