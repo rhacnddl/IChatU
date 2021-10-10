@@ -3,6 +3,7 @@ package com.gorany.ichatu.service;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.Profile;
 import com.gorany.ichatu.dto.*;
+import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
 public interface MemberService {
@@ -42,7 +43,7 @@ public interface MemberService {
                 .build();
     }
 
-    default MemberDTO entityToDTO(@Nullable Member member, @Nullable Profile profile){
+    default MemberDTO entityToDTO(@NonNull Member member, @NonNull Profile profile){
 
         /* Join -> JoinDTO */
 
