@@ -5,6 +5,7 @@ import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Member;
 import com.gorany.ichatu.domain.Profile;
 import com.gorany.ichatu.dto.ChatDTO;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -12,8 +13,24 @@ public interface ChatService {
 
     /* 채팅내역 저장 */
     void write(List<ChatDTO> chatDTOList);
-    /* 특정 채팅방의 채팅내역 조회 */
+    /**
+     * 특정 채팅방의 채팅내역 조회 V1
+     * @deprecated
+     * @param chatRoomId 채팅방 ID
+     * @param memberId 요청자 ID
+     * @param page 조회할 페이지
+     * @return List<ChatDTO> 채팅 내역
+     * */
+    @Deprecated
     List<ChatDTO> getChats(Long chatRoomId, Long memberId, Integer page);
+    /**
+     * 특정 채팅방의 채팅내역 조회 V2
+     * @param chatRoomId 채팅방 ID
+     * @param memberId 요청자 ID
+     * @param page 조회할 페이지
+     * @return List<ChatDTO> 채팅 내역
+     * */
+    Slice<ChatDTO> getChatsV2(Long chatRoomId, Long memberId, Integer page);
 
     default ChatDTO entityToDTO(Chat chat){
 
