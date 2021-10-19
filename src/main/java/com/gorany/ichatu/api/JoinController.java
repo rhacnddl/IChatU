@@ -39,12 +39,12 @@ public class JoinController {
 
     @DeleteMapping(value = "/{chatRoomId}/member/{memberId}")
     @ApiOperation(value = "채팅방 탈퇴", notes = "요청자가 채팅방을 탈퇴한다.")
-    public ResponseEntity<Integer> dropJoin(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
+    public ResponseEntity<String> dropJoin(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
 
         /* 만약 delete 과정 중 Exception이 발생하면? */
         log.info("#JoinController -> dropJoin({}, {})", chatRoomId, memberId);
-        Integer resultCount = joinService.dropChatRoom(chatRoomId, memberId);
+        joinService.dropChatRoom(chatRoomId, memberId);
 
-        return new ResponseEntity<>(resultCount, HttpStatus.OK);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }

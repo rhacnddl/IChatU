@@ -4,14 +4,13 @@ import com.gorany.ichatu.domain.*;
 import com.gorany.ichatu.dto.ChatDTO;
 import com.gorany.ichatu.dto.NotificationDTO;
 import com.gorany.ichatu.repository.NotificationRepository;
-import com.gorany.ichatu.repository.jpaRepository.JoinJpaRepository;
+import com.gorany.ichatu.repository.JoinRepository;
 import com.gorany.ichatu.storage.CheckStorage;
 import com.gorany.ichatu.storage.TokenStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -48,7 +47,8 @@ public class NotificationServiceImpl implements NotificationService{
     private final String COMMENT_ROUTING_KEY = "comment.";
 
     private final RabbitTemplate template;
-    private final JoinJpaRepository joinJpaRepository;
+    //private final JoinJpaRepository joinJpaRepository;
+    private final JoinRepository joinRepository;
     //private final NotificationJpaRepository notificationJpaRepository;
     private final NotificationRepository notificationRepository;
 
@@ -81,7 +81,7 @@ public class NotificationServiceImpl implements NotificationService{
         });*/
 
         /* get all User List in ChatRoom */
-        List<Long> memberIdList = joinJpaRepository.findMemberIdsByChatRoom(ChatRoom.builder().id(chatDTO.getChatRoomId()).build()).get();
+        List<Long> memberIdList = joinRepository.findMemberIdsByChatRoom(ChatRoom.builder().id(chatDTO.getChatRoomId()).build());
 
         /* send -> Database & return DTO List*/
         List<NotificationDTO> notificationDTOList = saveAndTransform(memberIdList, chatDTO);

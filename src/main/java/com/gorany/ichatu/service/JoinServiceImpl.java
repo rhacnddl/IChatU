@@ -3,7 +3,7 @@ package com.gorany.ichatu.service;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
-import com.gorany.ichatu.repository.jpaRepository.JoinJpaRepository;
+import com.gorany.ichatu.repository.JoinRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class JoinServiceImpl implements JoinService {
 
-    private final JoinJpaRepository joinJpaRepository;
+    //private final JoinJpaRepository joinJpaRepository;
+    private final JoinRepository joinRepository;
 
     @Override
     public Boolean checkJoinMember(Long chatRoomId, Long memberId) {
@@ -23,7 +24,7 @@ public class JoinServiceImpl implements JoinService {
         Member requester = Member.builder().id(memberId).build();
         ChatRoom chatRoom = ChatRoom.builder().id(chatRoomId).build();
 
-        return joinJpaRepository.findByChatRoomAndMember(chatRoom, requester).get();
+        return joinRepository.getCountByChatRoomAndMember(chatRoom, requester) == 1L;
     }
 
     @Override
@@ -34,18 +35,16 @@ public class JoinServiceImpl implements JoinService {
         ChatRoom chatRoom = ChatRoom.builder().id(chatRoomId).build();
         Join join = Join.builder().member(requester).chatRoom(chatRoom).build();
 
-        return joinJpaRepository.save(join);
+        return joinRepository.save(join).getId();
     }
 
     @Override
     @Transactional
-    public Integer dropChatRoom(Long chatRoomId, Long memberId) {
+    public void dropChatRoom(Long chatRoomId, Long memberId) {
 
         Member requester = Member.builder().id(memberId).build();
         ChatRoom chatRoom = ChatRoom.builder().id(chatRoomId).build();
 
-        Join join = Join.builder().member(requester).chatRoom(chatRoom).build();
-
-        return joinJpaRepository.remove(join);
+        joinRepository.removeByChatRoomAndMember(chatRoom, requester);
     }
 }

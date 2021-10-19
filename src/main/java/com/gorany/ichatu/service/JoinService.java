@@ -13,6 +13,6 @@ public interface JoinService {
     Long joinChatRoom(Long chatRoomId, Long memberId);
 
     /* A가 B 채팅방 나가기 */
-    Integer dropChatRoom(Long chatRoomId, Long memberId);
+    void dropChatRoom(Long chatRoomId, Long memberId);
 
 }

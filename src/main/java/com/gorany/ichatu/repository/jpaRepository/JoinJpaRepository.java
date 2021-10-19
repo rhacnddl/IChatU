@@ -1,21 +1,20 @@
 package com.gorany.ichatu.repository.jpaRepository;
 
-import com.gorany.ichatu.domain.Chat;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
-import com.gorany.ichatu.dto.AsideChatRoomDTO;
-import com.gorany.ichatu.exception.NoIdentityException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * JPA -> Spring Data JPA로 넘어가며 Deprecated
+ */
+@Deprecated
 @Repository
 @RequiredArgsConstructor
 public class JoinJpaRepository {

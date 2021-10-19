@@ -8,7 +8,7 @@ import com.gorany.ichatu.dto.ChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomMemberDTO;
 import com.gorany.ichatu.repository.NotificationRepository;
 import com.gorany.ichatu.repository.jpaRepository.ChatRoomJpaRepository;
-import com.gorany.ichatu.repository.jpaRepository.JoinJpaRepository;
+import com.gorany.ichatu.repository.JoinRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     //private final NotificationJpaRepository notificationJpaRepository;
     private final NotificationRepository notificationRepository;
     private final ChatRoomJpaRepository chatRoomJpaRepository;
-    private final JoinJpaRepository joinJpaRepository;
+    //private final JoinJpaRepository joinJpaRepository;
+    private final JoinRepository joinRepository;
 
     @Override
     @Transactional
@@ -43,7 +44,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Join join = Join.createJoin(member, chatRoom);
 
         log.info("# ChatRoomService -> JoinRepository.save(Join)");
-        Long joinId = joinJpaRepository.save(join);
+        Long joinId = joinRepository.save(join).getId();
 
         return chatRoomId;
     }
@@ -57,7 +58,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         log.info("# ChatRoomService -> ChatRoomRepository.remove(ChatRoom)");
 
         notificationRepository.removeAllByChatRoom(chatRoom.getId());
-        joinJpaRepository.removeAll(chatRoom);
+        joinRepository.removeAllByChatRoom(chatRoom);
 
         return chatRoomJpaRepository.remove(chatRoom);
     }
@@ -94,11 +95,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Member member = Member.builder().id(memberId).build();
 
         //List<ChatRoom> chatRooms = joinRepository.getAsideChatRoomsWithJoinByMember(member).get().stream().map(Join::getChatRoom).collect(Collectors.toList());
-        List objList = joinJpaRepository.getAsideChatRoomsWithJoinByMemberUsingNativeSQL(member);
+        List<Object[]> objList = joinRepository.getAsideChatRoomsWithJoinByMemberUsingNativeSQL(member);
 
-        List<AsideChatRoomDTO> list = (List<AsideChatRoomDTO>) objList.stream().map(obj -> AsideChatRoomDTO.createDtoByObj((Object[]) obj)).collect(Collectors.toList());
-
-        return list;
+        return objList.stream().map(AsideChatRoomDTO::createDtoByObj).collect(Collectors.toList());
     }
 
     @Override
@@ -114,7 +113,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         ChatRoom chatRoom = ChatRoom.builder().id(chatRoomId).build();
 
-        List<Join> joins = joinJpaRepository.getMembersAndProfile(chatRoom).get();
+        List<Join> joins = joinRepository.getMembersAndProfile(chatRoom);
 
         return joins.stream().map(ChatRoomMemberDTO::createChatRoomMemberDTO).collect(Collectors.toList());
     }

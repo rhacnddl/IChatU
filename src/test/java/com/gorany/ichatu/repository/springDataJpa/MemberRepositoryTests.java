@@ -66,6 +66,24 @@ public class MemberRepositoryTests {
         em.flush();
     }
     @Test
+    @DisplayName("프로필 생성 분석 테스트")
+    public void 프로필_생성_분석() throws Exception{
+
+        //given
+        Member member = createMember("member", "12345", null); repository.save(member);
+        Profile profile = createProfile("profile", null);
+        Long id = member.getId();
+        em.flush();
+        em.clear();
+
+        //when
+        Member find = repository.findById(id).get();
+        find.changeProfile(profile);
+        em.flush();
+        //then
+
+    }
+    @Test
     @DisplayName("Mypage에서 Member + Profile조회 테스트")
     public void 마이페이지_조회_테스트() throws Exception{
 
