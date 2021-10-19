@@ -3,17 +3,24 @@ package com.gorany.ichatu.service;
 import com.gorany.ichatu.domain.ChatRoom;
 import com.gorany.ichatu.domain.Join;
 import com.gorany.ichatu.domain.Member;
+import com.gorany.ichatu.domain.Region;
 import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomMemberDTO;
+import com.gorany.ichatu.repository.ChatRoomRepository;
 import com.gorany.ichatu.repository.NotificationRepository;
 import com.gorany.ichatu.repository.jpaRepository.ChatRoomJpaRepository;
 import com.gorany.ichatu.repository.JoinRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +33,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     //private final NotificationJpaRepository notificationJpaRepository;
     private final NotificationRepository notificationRepository;
-    private final ChatRoomJpaRepository chatRoomJpaRepository;
+    //private final ChatRoomJpaRepository chatRoomJpaRepository;
+    private final ChatRoomRepository chatRoomRepository;
     //private final JoinJpaRepository joinJpaRepository;
     private final JoinRepository joinRepository;
 
@@ -37,13 +45,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         /* DTO -> Entity */
         ChatRoom chatRoom = dtoToEntity(chatRoomDTO);
         /* register */
-        log.info("# ChatRoomService -> ChatRoomRepository.save(ChatRoom)");
-        Long chatRoomId = chatRoomJpaRepository.save(chatRoom);
+        Long chatRoomId = chatRoomRepository.save(chatRoom).getId();
         /* Member & ChatRoom -> Join */
         Member member = chatRoom.getMember();
         Join join = Join.createJoin(member, chatRoom);
 
-        log.info("# ChatRoomService -> JoinRepository.save(Join)");
         Long joinId = joinRepository.save(join).getId();
 
         return chatRoomId;
@@ -51,23 +57,20 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     @Transactional
-    public Long removeRoom(Long chatRoomId) {
+    public void removeRoom(Long chatRoomId) {
 
-        ChatRoom chatRoom = chatRoomJpaRepository.findById(chatRoomId).get();
-
-        log.info("# ChatRoomService -> ChatRoomRepository.remove(ChatRoom)");
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new NoResultException("엔티티가 없습니다."));
 
         notificationRepository.removeAllByChatRoom(chatRoom.getId());
         joinRepository.removeAllByChatRoom(chatRoom);
 
-        return chatRoomJpaRepository.remove(chatRoom);
+        chatRoomRepository.delete(chatRoom);
     }
 
     @Override
     public ChatRoomDTO getRoom(Long id) {
 
-        log.info("# ChatRoomService -> ChatRoomRepository.findById(ID)");
-        Optional<ChatRoom> result = chatRoomJpaRepository.findById(id);
+        Optional<ChatRoom> result = chatRoomRepository.findById(id);
 
         if(result.isEmpty())
             return null;
@@ -76,18 +79,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public List<ChatRoomDTO> getRooms() {
+    public Slice<ChatRoomDTO> getRooms(int page, Long regionId) {
 
         //지역 설정 + 페이징
-        log.info("# ChatRoomService -> ChatRoomRepository.findAll()");
-        Optional<List<ChatRoom>> result = chatRoomJpaRepository.findAll();
+        Region region = Region.builder().id(regionId).build();
+        Pageable pageable = PageRequest.of(page - 1, 20, Sort.Direction.DESC, "id");
 
-        if(result.isEmpty())
-            return null;
-
-        List<ChatRoomDTO> rooms = result.get().stream().map(this::entityToDTO).collect(Collectors.toList());
-
-        return rooms;
+        return chatRoomRepository.findAllBy(pageable, region).map(this::entityToDTO);
     }
 
     @Override
@@ -103,7 +101,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     public boolean isOwner(Long chatRoomId, Long memberId) {
 
-        ChatRoom chatRoom = chatRoomJpaRepository.findById(chatRoomId).get();
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new NoResultException("엔티티가 없습니다."));
 
         return chatRoom.getMember().getId().equals(memberId);
     }

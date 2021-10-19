@@ -10,6 +10,13 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * JPA -> Spring Data JPA로 인한 Deprecated
+ * @deprecated
+ * @author gorany
+ * @version 1.0
+ * */
+@Deprecated
 @Repository
 public class ChatRoomJpaRepository {
 

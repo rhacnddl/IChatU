@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@ToString(exclude = {"member", "region", "chatList"})
+@ToString(exclude = {"member", "region", "chatList", "joinList"})
 public class ChatRoom extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

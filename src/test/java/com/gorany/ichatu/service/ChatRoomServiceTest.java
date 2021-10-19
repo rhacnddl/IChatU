@@ -5,12 +5,12 @@ import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 import com.gorany.ichatu.dto.MemberDTO;
 import com.gorany.ichatu.dto.ProfileDTO;
-import com.gorany.ichatu.repository.jpaRepository.RegionJpaRepository;
+import com.gorany.ichatu.repository.RegionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,15 +26,14 @@ class ChatRoomServiceTest {
     @Autowired ChatRoomService chatRoomService;
     @Autowired MemberService memberService;
     @Autowired
-    RegionJpaRepository regionJpaRepository;
+    RegionRepository regionRepository;
 
     @Test
     @DisplayName("채팅방 조회 테스트")
-
     void getRooms() {
 
         //given
-        Long regionId = regionJpaRepository.save(Region.builder().name("도봉구").build());
+        Long regionId = regionRepository.save(Region.builder().name("도봉구").build()).getId();
         ProfileDTO profile = ProfileDTO.builder().profileId(UUID.randomUUID().toString()).name("test name").path("test path").build();
         MemberDTO member = MemberDTO.builder().
                 nickname("test Nickname").password("12345").email("test email").build();
@@ -56,13 +55,13 @@ class ChatRoomServiceTest {
         });
         System.out.println("-----given-----");
         //when
-        List<ChatRoomDTO> rooms = chatRoomService.getRooms();
+        Slice<ChatRoomDTO> rooms = chatRoomService.getRooms(1, 1L);
 
         System.out.println("-----when-----");
         //then
         rooms.forEach(System.out::println);
-        assertThat(rooms.size()).isEqualTo(50);
-
+        assertThat(rooms.getSize()).isEqualTo(20);
+        assertThat(rooms.getContent().size()).isEqualTo(20);
     }
 
     @Test

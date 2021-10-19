@@ -10,11 +10,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +29,10 @@ public class ChatRoomController {
 
     @GetMapping(value = "/{regionId}/list/{page}")
     @ApiOperation(value = "채팅방 목록 조회", notes = "지역별 채팅방 목록을 조회한다.")
-    public ResponseEntity<List<ChatRoomDTO>> getRooms(@PathVariable("regionId") Long regionId){
+    public ResponseEntity<Slice<ChatRoomDTO>> getRooms(@PathVariable("regionId") Long regionId,
+                                                       @PathVariable("page") Optional<Integer> page){
 
-        List<ChatRoomDTO> rooms = chatRoomService.getRooms();
+        Slice<ChatRoomDTO> rooms = chatRoomService.getRooms(page.orElse(1), regionId);
 
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
@@ -66,16 +69,16 @@ public class ChatRoomController {
 
     @DeleteMapping("/{chatRoomId}/member/{memberId}")
     @ApiOperation(value = "채팅방 삭제", notes = "방장이 채팅방을 삭제한다. 관련된 알림과 채팅도 함께 삭제된다.")
-    public ResponseEntity<Long> removeChatRoom(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
+    public ResponseEntity<String> removeChatRoom(@PathVariable("chatRoomId") Long chatRoomId, @PathVariable("memberId") Long memberId){
 
         /* Requester == Owner인지 Check Validation */
         if(!chatRoomService.isOwner(chatRoomId, memberId)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Long id = chatRoomService.removeRoom(chatRoomId);
+        chatRoomService.removeRoom(chatRoomId);
 
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @GetMapping("/{chatRoomId}/users")

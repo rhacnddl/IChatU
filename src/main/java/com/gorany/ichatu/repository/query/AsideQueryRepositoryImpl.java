@@ -34,7 +34,8 @@ public class AsideQueryRepositoryImpl implements AsideQueryRepository{
                 "r.region_id, " +
                 "content, contentRegDate, " +
                 "j.member_id " +
-                "having j.member_id = :member_id";
+                "having j.member_id = :member_id " +
+                "order by cr.chat_room_id desc";
 
         return em.createNativeQuery(nativeSQL)
                 .setParameter("member_id", member.getId())

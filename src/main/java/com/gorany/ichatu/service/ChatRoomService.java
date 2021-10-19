@@ -7,6 +7,7 @@ import com.gorany.ichatu.domain.Region;
 import com.gorany.ichatu.dto.AsideChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomDTO;
 import com.gorany.ichatu.dto.ChatRoomMemberDTO;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +17,11 @@ public interface ChatRoomService {
     /* 채팅방 추가 */
     Long addRoom(ChatRoomDTO chatRoomDTO);
     /* 채팅방 삭제 */
-    Long removeRoom(Long chatRoomId);
+    void removeRoom(Long chatRoomId);
     /* 채팅방 조회(단건) */
     ChatRoomDTO getRoom(Long id);
     /* 채팅방 조회(list) */
-    List<ChatRoomDTO> getRooms();
+    Slice<ChatRoomDTO> getRooms(int page, Long regionId);
     /* A가 가입한 채팅방 목록 (ASIDE) */
     List<AsideChatRoomDTO> getRoomsOnAside(Long memberId);
     /* 채팅방 삭제시, 주인인지 유효성 검사 */
